@@ -1,38 +1,25 @@
 package cl.uchile.dcc.citric
-package model
+package model.panel
 
+import model.unit.player.IPlayer
 import scala.collection.mutable.ArrayBuffer
 
-/**An abstract class of a Panel.
- *
- * In order to ensure that the panel will always have one or more nextPanel,
- * we model the panels similar to a Circular Linked List.
- *
- * @constructor Creates a new Panel linked to itself.
- *
- * @see [[https://en.wikipedia.org/wiki/Linked_list#Circular_linked_list]]
- */
-abstract class APanel extends Panel{
-    /** Array of the characters currently positioned on this panel. */
-    val characters: ArrayBuffer[PlayerCharacter] = new ArrayBuffer[PlayerCharacter]()
+abstract class APanel extends Panel {
 
-    /** An array of panels that are directly connected to this one. */
-    val nextPanels: ArrayBuffer[Panel] = new ArrayBuffer[Panel]()
+    override val characters: ArrayBuffer[IPlayer] = new ArrayBuffer[IPlayer]()
+
+    override val nextPanels: ArrayBuffer[Panel] = new ArrayBuffer[Panel]()
     // Link to itself (single panel).
     nextPanels.addOne(this)
 
-    /** Returns the type of the Panel. */
-    def panelType: String = this.getClass.getSimpleName
+    override def panelType: String = this.getClass.getSimpleName
 
-    /** Adds a character to the list of characters currently on this panel. */
-    def addCharacter(player: PlayerCharacter): Unit = {
+    override def addCharacter(player: IPlayer): Unit = {
         if(characters.indexOf(player) == -1 ){
             characters.addOne(player)
         }
     }
-
-    /** Removes a character from the list of characters currently on this panel. */
-    def removeCharacter(player: PlayerCharacter): Unit = {
+    override def removeCharacter(player: IPlayer): Unit = {
         val index = characters.indexOf(player)
         if (index != -1) {
             characters.remove(index)
@@ -52,13 +39,13 @@ abstract class APanel extends Panel{
      * @param otherPanel      The Panel to link, it must be a single panel.
      * @param multi_link_mode Choose the method for linking the panels.
      */
-    def addNextPanel(otherPanel: Panel, multi_link_mode: Boolean = false): Unit = {
+    override def addNextPanel(otherPanel: Panel, multi_link_mode: Boolean): Unit = {
         /*
         Can not link to itself.
         Other Panel must be a single Panel ().
         Can't add two times the same Panel.
          */
-        if( this == otherPanel ||
+        if (this == otherPanel ||
             otherPanel.nextPanels.indexOf(otherPanel) == -1 ||
             nextPanels.indexOf(otherPanel) != -1)
             return
@@ -79,7 +66,4 @@ abstract class APanel extends Panel{
             nextPanels.addOne(otherPanel)
         }
     }
-
-    /** The effect of the Panel in a player. */
-    def effect(player: PlayerCharacter): Unit
 }

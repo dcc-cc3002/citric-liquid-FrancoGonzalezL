@@ -1,5 +1,7 @@
 package cl.uchile.dcc.citric
-package model
+package model.panel
+
+import model.unit.player.IPlayer
 
 /**A class representing a Home Panel.
  *
@@ -18,10 +20,15 @@ package model
  *
  * @param owner The player that owns the Panel
  */
-class HomePanel(val owner: PlayerCharacter) extends APanel {
+class HomePanel(val owner: IPlayer) extends APanel {
+
+    /* Provisional method */
     /**Gives the player 1 point of life and performs a Norma Check
      *
      * @param player The player that has moved to this Panel.
      */
-    override def effect(player: PlayerCharacter): Unit = return
+    override def effect(player: IPlayer): Unit = {
+        player.increaseHp(1)
+        player.normaCheck()
+    }
 }

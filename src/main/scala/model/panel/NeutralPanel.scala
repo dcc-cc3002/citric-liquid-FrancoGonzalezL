@@ -1,5 +1,7 @@
 package cl.uchile.dcc.citric
-package model
+package model.panel
+
+import model.unit.player.IPlayer
 
 /**A class representing a NeutralPanel.
  *
@@ -7,5 +9,5 @@ package model
  */
 class NeutralPanel extends APanel {
     /** Literally, does nothing. */
-    override def effect(player: PlayerCharacter): Unit = return
+    override def effect(player: IPlayer): Unit = return
 }

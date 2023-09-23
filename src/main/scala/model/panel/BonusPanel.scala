@@ -1,5 +1,7 @@
 package cl.uchile.dcc.citric
-package model
+package model.panel
+
+import model.unit.player.IPlayer
 
 /**A class representing a Bonus Panel
  *
@@ -9,10 +11,15 @@ package model
  * win a number of stars equal to min(roll*norma, roll*3)
  */
 class BonusPanel extends APanel {
+
     /**Calculates the number of starts to give
      * and adds them to the player.
      *
      * @param player The player that has moved to this Panel.
      */
-    override def effect(player: PlayerCharacter): Unit = return
+    override def effect(player: IPlayer): Unit = {
+        val roll: Int = player.rollDice()
+        val amount: Int = math.min(roll*player.getNorma, roll*3)
+        player.addStars(amount)
+    }
 }
