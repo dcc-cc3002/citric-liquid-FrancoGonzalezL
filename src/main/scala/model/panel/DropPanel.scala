@@ -11,13 +11,15 @@ import model.unit.player.IPlayer
  * lose a number of stars equal to roll*norma.
  */
 class DropPanel extends APanel {
+
     /**Calculates the number of starts to remove from the player
      * and removes them.
      *
      * @param player The player that has moved to this Panel.
      */
-    override def effect(player: IPlayer): Unit = {
+    override def effect(player: IPlayer): Boolean = {
         val roll: Int = player.rollDice()
-        player.removeStars(roll*player.getNorma)
+        player.removeStars(roll*player.norma)
+        true
     }
 }

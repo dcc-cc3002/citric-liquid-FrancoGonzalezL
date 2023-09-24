@@ -27,8 +27,8 @@ class HomePanel(val owner: IPlayer) extends APanel {
      *
      * @param player The player that has moved to this Panel.
      */
-    override def effect(player: IPlayer): Unit = {
-        player.increaseHp(1)
-        player.normaCheck()
+    override def effect(player: IPlayer): Boolean = {
+        player.increaseHp(amount=1)
+        player.normaCheck(panel=this)
     }
 }

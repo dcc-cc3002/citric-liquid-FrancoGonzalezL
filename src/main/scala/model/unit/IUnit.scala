@@ -24,39 +24,39 @@ trait IUnit {
     /** The evasion points of the unit */
     val evasion: Int
 
-    /** Method to increase the stars of the unit.
+    /** Return the current amount of hit points */
+    def hp: Int
+
+    /** Method to get the current amount of stars. */
+    def stars: Int
+
+    /** Adds stars to the unit.
      *
      * @param amount The amount of stars to add.
      */
     def addStars(amount: Int): Unit
 
-    /** Method to reduce the stars of the unit.
+    /** Removes stars from the unit.
      *
      * @param amount The amount of stars to remove.
      */
     def removeStars(amount: Int): Unit
 
-    /** Method to get the current amount of stars.*/
-    def getStars: Int
-
-    /** Return the current amount of hit points */
-    def getHp: Int
-
     /** Increases the amount of hit points.
      *
-     * @param amount The amount to add. It must be
-     *               greater than or equal to 0.
-     *               If the result is greater than the max
-     *               hit points then set the HP equal to
-     *               the maxHP.
+     * The hp should not be greater than maxHp.
+     *
+     * @param amount The amount to add to the hp.
+     *               It should be positive.
      */
     def increaseHp(amount: Int): Unit
 
     /** Reduces the amount of current hit points.
      *
-     * @param amount the amount to remove from the hit points.
-     *               If the result is less than 0, then set
-     *               the HP equal to 0.
+     * The hp should not be less than 0.
+     *
+     * @param amount The amount to remove from the hp.
+     *               It should be positive.
      */
     def reduceHp(amount: Int): Unit
 }

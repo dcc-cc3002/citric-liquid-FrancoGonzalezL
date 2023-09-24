@@ -2,7 +2,17 @@ package cl.uchile.dcc.citric
 package model.norma
 
 import model.unit.player.IPlayer
+import model.panel.{Panel, HomePanel}
 
+/** A class representing a Norma.
+ *
+ * Each instance of Norma should be associated with a player.
+ *
+ * @constructor Creates a Norma with norma level equals 1. The goal is
+ *              initialized empty, so it should be initialized.
+ *
+ * @param player The player associated with the Norma.
+ */
 class Norma(player: IPlayer) extends INorma{
     /** Victories String */
     private val victories_s = "Victories"
@@ -22,32 +32,36 @@ class Norma(player: IPlayer) extends INorma{
      *
      * Every player stars with Norma equals 1.
      */
-    private var norma: Int = 1
+    private var _norma: Int = 1
 
     /** Current goal of the player.
      *
      * It needs to be initialized.
      */
-    private var goal: Option[String] = None
+    private var _goal: Option[String] = None
 
-    override def getNorma: Int = norma
+    override def norma: Int = _norma
 
-    override def setGoal(option: String): Boolean = {
-        if (goal.isEmpty && (option == stars_s || option == victories_s)) {
-            goal = Some(option)
+    override def goal: String = {
+        if(_goal.isEmpty) ""
+        else _goal.get
+    }
+
+    override def goal_=(option: String): Boolean = {
+        if (_goal.isEmpty && (option == stars_s || option == victories_s)) {
+            _goal = Some(option)
             true
         }else false
     }
 
-    override def normaCheck(): Boolean = {
-        if (goal.isEmpty) return false
-        if (norma == 6) return false
+    override def normaCheck(panel: Panel): Boolean = {
+        if (_goal.isEmpty || norma == 6 || !panel.isInstanceOf[HomePanel]) false
         // If the player meets the requirements of the goal.
-        if (goal.get == stars_s && player.getStars >= goalOptions(norma + 1)(stars_s) ||
-            goal.get == victories_s && player.getVictories >= goalOptions(norma + 1)(victories_s)) {
+        else if((goal == stars_s     && player.stars     >= goalOptions(norma+1)(stars_s)) ||
+                (goal == victories_s && player.victories >= goalOptions(norma+1)(victories_s)) ){
             // Level up Norma.
-            norma += 1
-            goal = None
+            _norma += 1
+            _goal = None
             true
         }else false
     }

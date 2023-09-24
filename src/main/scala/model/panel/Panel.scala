@@ -2,7 +2,6 @@ package cl.uchile.dcc.citric
 package model.panel
 
 import model.unit.player.IPlayer
-import scala.collection.mutable.ArrayBuffer
 
 /** Represents a single cell on a board, known as a Panel.
  *
@@ -16,27 +15,19 @@ import scala.collection.mutable.ArrayBuffer
  * @author [[https://github.com/FrancoGonzalezL Franco González L.]]
  */
 trait Panel {
-    /** Array of the characters currently positioned on this panel.
-     *
-     * In the game, multiple characters might be on the same panel at once, e.g., if multiple players
-     * land on the same space.
-     */
-    val characters: ArrayBuffer[IPlayer]
-
-    /** An array of panels that are directly connected to this one.
-     *
-     * In the context of the game, multiple routes or paths may exist, this could represent the
-     * possible next steps a player might take after being on this panel.
-     *
-     * @return a List of Panel instances that are adjacent or connected to this panel.
-     */
-    val nextPanels: ArrayBuffer[Panel]
-
     /** Returns the type of the Panel.
      *
      * The type of the Panel is the name of the class.
      */
     def panelType: String
+
+    def containsCharacter(character: IPlayer): Boolean
+
+    def charactersCount: Int
+
+    def isPrevTo(otherPanel: Panel): Boolean
+
+    def nextPanelsCount: Int
 
     /** Adds a character to the list of characters currently on this panel.
      *
@@ -44,7 +35,7 @@ trait Panel {
      *
      * @param player The player character to add to this panel.
      */
-    def addCharacter(player: IPlayer): Unit
+    def addCharacter(player: IPlayer): Boolean
 
     /** Removes a character from the list of characters currently on this panel.
      *
@@ -52,32 +43,18 @@ trait Panel {
      *
      * @param player The player character to remove from this panel.
      */
-    def removeCharacter(player: IPlayer): Unit
+    def removeCharacter(player: IPlayer): Boolean
 
     /**Adds a Panel to the list of nextPanels.
      *
      * This might be use to connect the panels
      *
-     * @param otherPanel      The panel to link.
-     * @param multi_link_mode Choose the method for linking the panels.
-     * @example
-     * {{{
-     *     val a: Panel = new NeutralPanel
-     *     val b: Panel = new NeutralPanel
-     *     val c: Panel = new NeutralPanel
-     *     val x: Panel = new NeutralPanel
+     * @param otherPanel    The panel to link.
      *
-     *     a.addNextPanel(c, multi_link_mode = false)
-     *     // ( a->c; c->a )
-     *
-     *     a.addNextPanel(b, multi_link_mode = false)
-     *     // ( a->b; b->c; c->a )
-     *
-     *    a.addNextPanel(x, multi_link_mode = true)
-     *     // ( a->x,b; x->a; b->c; c->a )
-     * }}}
+     * @return True if the panel has been added correctly;
+     *         otherwise false.
      */
-    def addNextPanel(otherPanel: Panel, multi_link_mode: Boolean): Unit
+    def addNextPanel(otherPanel: Panel): Boolean
 
     /**The effect of the Panel in a player.
      *
@@ -87,6 +64,6 @@ trait Panel {
      *
      * @param player The player that has moved to this Panel.
      */
-    def effect(player: IPlayer): Unit
+    def effect(player: IPlayer): Boolean
 }
 

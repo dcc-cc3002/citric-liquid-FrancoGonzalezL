@@ -17,9 +17,10 @@ class BonusPanel extends APanel {
      *
      * @param player The player that has moved to this Panel.
      */
-    override def effect(player: IPlayer): Unit = {
+    override def effect(player: IPlayer): Boolean = {
         val roll: Int = player.rollDice()
-        val amount: Int = math.min(roll*player.getNorma, roll*3)
+        val amount: Int = math.min(roll*player.norma, roll*3)
         player.addStars(amount)
+        true
     }
 }

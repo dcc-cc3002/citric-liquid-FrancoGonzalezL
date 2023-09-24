@@ -75,24 +75,24 @@ class PlayerCharacterTest extends munit.FunSuite {
         val wildUnit: IUnit = new Chicken()
 
         character.addVictories(otherPlayer)
-        assertEquals(character.getVictories, 2)
+        assertEquals(character.victories, 2)
 
         character2.addVictories(wildUnit)
-        assertEquals(character2.getVictories, 1)
+        assertEquals(character2.victories, 1)
     }
 
     test("If the player defeats another player, then the Victories counter increases in 2 points"){
         val player2: IUnit = new PlayerCharacter(name="player2",maxHp,attack,defense,evasion)
-        val victories: Int = character.getVictories
+        val victories: Int = character.victories
         character.addVictories(player2)
-        assertEquals(character.getVictories, victories+2)
+        assertEquals(character.victories, victories+2)
     }
 
     test("If the player defeats a wildUnit, then the Victories counter increases in 1 point"){
         val wildUnit: IUnit = new Chicken
-        val victories: Int = character.getVictories
+        val victories: Int = character.victories
         character.addVictories(wildUnit)
-        assertEquals(character.getVictories, victories+1)
+        assertEquals(character.victories, victories+1)
     }
 
     test("If a character's hp reaches 0, then the character will be KO"){

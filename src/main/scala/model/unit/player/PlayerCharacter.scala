@@ -4,6 +4,7 @@ package model.unit.player
 import model.unit.wildunit.WildUnit
 import model.unit.{AUnit, IUnit}
 import model.norma.{INorma, Norma}
+import model.panel.Panel
 
 import scala.util.Random
 
@@ -52,22 +53,22 @@ class PlayerCharacter(override val name: String,
     extends AUnit(maxHp) with IPlayer {
 
     /** Victories counter. */
-    private var victories: Int = 0
+    private var _victories: Int = 0
 
     /** When a player is knockout the ko var sets to true */
     private var ko: Boolean = false
 
     /** Norma of the player */
-    private val norma: INorma = new Norma(this)
+    private val Norma: INorma = new Norma(this)
 
-    override def getVictories: Int = victories
+    override def victories: Int = _victories
 
     /* Provisional method */
     override def addVictories(unit: IUnit): Unit = {
         if(unit.isInstanceOf[WildUnit])
-            victories += 1
+            _victories += 1
         if(unit.isInstanceOf[PlayerCharacter])
-            victories += 2
+            _victories += 2
     }
 
     override def rollDice(): Int = randomNumberGenerator.nextInt(6) + 1
@@ -84,7 +85,7 @@ class PlayerCharacter(override val name: String,
      */
     override def reduceHp(amount: Int): Unit = {
         super.reduceHp(amount)
-        if(this.getHp == 0)
+        if(this.hp == 0)
             ko = true
     }
 
@@ -93,9 +94,13 @@ class PlayerCharacter(override val name: String,
             ko = false
     }
 
-    override def getNorma: Int = norma.getNorma
+    override def norma: Int = Norma.norma
 
-    override def setGoal(option: String): Boolean = norma.setGoal(option)
+    override def goal: String = Norma.goal
 
-    override def normaCheck(): Boolean = norma.normaCheck()
+    override def goal_=(option: String): Boolean = {
+        Norma.goal = option
+    }
+
+    override def normaCheck(panel: Panel): Boolean = Norma.normaCheck(panel: Panel)
 }

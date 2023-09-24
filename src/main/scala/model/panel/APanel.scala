@@ -2,68 +2,73 @@ package cl.uchile.dcc.citric
 package model.panel
 
 import model.unit.player.IPlayer
+
+import cl.uchile.dcc.citric.model.unit.IUnit
+
 import scala.collection.mutable.ArrayBuffer
 
+/** Abstract class representing a Panel. */
 abstract class APanel extends Panel {
 
-    override val characters: ArrayBuffer[IPlayer] = new ArrayBuffer[IPlayer]()
+    /** Array of the characters currently positioned on this panel.
+     *
+     * In the game, multiple characters might be on the same panel at once, e.g., if multiple players
+     * land on the same space.
+     */
+    private val characters: ArrayBuffer[IPlayer] = new ArrayBuffer[IPlayer]()
 
-    override val nextPanels: ArrayBuffer[Panel] = new ArrayBuffer[Panel]()
-    // Link to itself (single panel).
-    nextPanels.addOne(this)
+    /** An array of panels that are directly connected to this one.
+     *
+     * In the context of the game, multiple routes or paths may exist, this could represent the
+     * possible next steps a player might take after being on this panel.
+     *
+     * @return a List of Panel instances that are adjacent or connected to this panel.
+     */
+    private val nextPanels: ArrayBuffer[Panel] = new ArrayBuffer[Panel]()
+
+    override def containsCharacter(character: IPlayer): Boolean = {
+        if (characters.indexOf(character) == -1)
+            false
+        else
+            true
+    }
+
+    override def charactersCount: Int = characters.size
+
+    override def isPrevTo(otherPanel: Panel): Boolean = {
+        if(nextPanels.indexOf(otherPanel) == -1)
+            false
+        else
+            true
+    }
+
+    override def nextPanelsCount: Int = nextPanels.size
 
     override def panelType: String = this.getClass.getSimpleName
 
-    override def addCharacter(player: IPlayer): Unit = {
-        if(characters.indexOf(player) == -1 ){
+    override def addCharacter(player: IPlayer): Boolean = {
+        if(!containsCharacter(player)){
             characters.addOne(player)
-        }
+            true
+        }else false
     }
-    override def removeCharacter(player: IPlayer): Unit = {
-        val index = characters.indexOf(player)
-        if (index != -1) {
+
+    override def removeCharacter(player: IPlayer): Boolean = {
+        if (!containsCharacter(player)) false
+        else{
+            val index = characters.indexOf(player)
             characters.remove(index)
+            true
         }
     }
 
-    /**Adds a Panel to the list of nextPanels.
-     *
-     * Only single Panels are connected to itself.
-     *
-     * To link two Panels normally (multi_link_mode = false), link the otherPanel to all the nextPanels of thisPanel
-     * and remove all the nextPanels of thisPanel, and then link thisPanel to the otherPanel.
-     *
-     * To link two Panels with the second method (multi_link_mode = true), link thisPanel to the otherPanel and
-     * link the otherPanel to thisPanel (remove the link to itself)
-     *
-     * @param otherPanel      The Panel to link, it must be a single panel.
-     * @param multi_link_mode Choose the method for linking the panels.
-     */
-    override def addNextPanel(otherPanel: Panel, multi_link_mode: Boolean): Unit = {
-        /*
-        Can not link to itself.
-        Other Panel must be a single Panel ().
-        Can't add two times the same Panel.
-         */
-        if (this == otherPanel ||
-            otherPanel.nextPanels.indexOf(otherPanel) == -1 ||
-            nextPanels.indexOf(otherPanel) != -1)
-            return
-        //If this Panel is a single Panel, link normally (single Panels are linked to itself).
-        if(multi_link_mode && nextPanels.indexOf(this) == -1){
-            //Link this Panel to otherPanel.
+    override def addNextPanel(otherPanel: Panel): Boolean = {
+        /*  Can not link to itself, nor can add the same panel twice. */
+        if (this == otherPanel || this.isPrevTo(otherPanel))
+            false
+        else{
             nextPanels.addOne(otherPanel)
-            //OtherPanel should be linked only to this.
-            otherPanel.nextPanels.clear()
-            otherPanel.nextPanels.addOne(this)
-        }else{
-            //Link otherPanel to all the Panels next to this panel.
-            for(panel <- nextPanels){
-                otherPanel.nextPanels.addOne(panel)
-            }
-            //This panel should be linked only to the otherPanel.
-            nextPanels.clear()
-            nextPanels.addOne(otherPanel)
+            true
         }
     }
 }

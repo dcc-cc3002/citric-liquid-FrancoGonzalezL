@@ -1,7 +1,12 @@
 package cl.uchile.dcc.citric
 package model.unit.wildunit
 
-class Chicken(override val name: String = "Chicken") extends WildUnit(3) {
+/** Class representing one of the three available 'bellacos'.
+ *
+ * @param name The name of the wild unit. The predetermined
+ *             name is the name of the class.
+ */
+class Chicken(override val name: String = "Chicken") extends WildUnit(hp=3) {
     override val maxHp:   Int =  3
     override val attack:  Int = -1
     override val defense: Int = -1

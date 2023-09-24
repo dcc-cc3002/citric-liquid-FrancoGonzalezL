@@ -30,12 +30,10 @@ class EncounterPanel extends APanel {
     }
 
     /** Returns true if the wildUnit is None or if the wildUnit is dead. */
-    private def checkUnit(): Boolean = {
-        if(wildUnit.isEmpty)
-            true
-        else if(wildUnit.get.getHp == 0)
-            true
-        else false
+    private def unitIsAlive(): Boolean = {
+        if(wildUnit.isEmpty || wildUnit.get.hp == 0)
+            false
+        else true
     }
 
     /* Provisional method */
@@ -43,8 +41,9 @@ class EncounterPanel extends APanel {
      *
      * @param player The player that has moved to this Panel.
      */
-    override def effect(player: IPlayer): Unit = {
-        if(checkUnit())
+    override def effect(player: IPlayer): Boolean = {
+        if(!unitIsAlive())
             setUnit()
+        true
     }
 }

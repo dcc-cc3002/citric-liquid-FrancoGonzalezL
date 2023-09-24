@@ -9,5 +9,5 @@ import model.unit.player.IPlayer
  */
 class NeutralPanel extends APanel {
     /** Literally, does nothing. */
-    override def effect(player: IPlayer): Unit = return
+    override def effect(player: IPlayer): Boolean = true
 }
