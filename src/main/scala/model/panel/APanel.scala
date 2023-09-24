@@ -4,6 +4,7 @@ package model.panel
 import model.unit.player.IPlayer
 import scala.collection.mutable.ArrayBuffer
 
+/** Abstract class representing a Panel */
 abstract class APanel extends Panel {
 
     override val characters: ArrayBuffer[IPlayer] = new ArrayBuffer[IPlayer]()

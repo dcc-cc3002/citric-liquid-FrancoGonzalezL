@@ -3,6 +3,7 @@ package model.norma
 
 import model.unit.player.IPlayer
 
+/** Class representing the Norma of a player. */
 class Norma(player: IPlayer) extends INorma{
     /** Victories String */
     private val victories_s = "Victories"

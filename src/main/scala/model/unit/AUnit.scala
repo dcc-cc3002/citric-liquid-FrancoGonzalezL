@@ -1,6 +1,11 @@
 package cl.uchile.dcc.citric
 package model.unit
 
+
+/** Abstract class representing a unit.
+ *
+ * @param hp The initial value of hp.
+ */
 abstract class AUnit(
                         /** Current amount of hit points */
                         private var hp: Int
