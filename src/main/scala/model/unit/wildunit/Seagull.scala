@@ -3,6 +3,8 @@ package model.unit.wildunit
 
 /** Class representing one of the three available 'bellacos'.
  *
+ * @constructor Creates a Wild Unit with default values.
+ *
  * @param name The name of the wild unit. The predetermined
  *             name is the name of the class.
  */
