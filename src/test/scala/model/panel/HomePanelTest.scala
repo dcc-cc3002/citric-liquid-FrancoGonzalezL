@@ -26,17 +26,17 @@ class HomePanelTest extends munit.FunSuite {
     }
 
     test("A Home Panel increases the current amount of hp in 1 point") {
-        player1.reduceHp(30)
+        player1.hp -= 30
         val hp: Int = player1.hp
-        homePanel.effect(player1)
+        homePanel.apply(player1)
         assertEquals(player1.hp, hp + 1)
     }
 
     test("A Home Panel performs a Norma Check") {
         val lvlNorma: Int = player1.norma
         player1.goal = "Stars"
-        player1.addStars(amount=10)
-        homePanel.effect(player1)
+        player1.stars += 10
+        homePanel.apply(player1)
         assertEquals(player1.norma, lvlNorma + 1)
     }
 }

@@ -64,6 +64,6 @@ trait Panel {
      *
      * @param player The player that has moved to this Panel.
      */
-    def effect(player: IPlayer): Boolean
+    def apply(player: IPlayer): Boolean
 }
 

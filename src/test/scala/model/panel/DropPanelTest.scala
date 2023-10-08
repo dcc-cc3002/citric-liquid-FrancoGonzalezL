@@ -19,9 +19,9 @@ class DropPanelTest extends munit.FunSuite {
     }
 
     test("A Drop Panel removes 0 or more stars") {
-        player1.addStars(100)
+        player1.stars = 100
         val stars: Int = player1.stars
-        dropPanel.effect(player1)
+        dropPanel.apply(player1)
         assert(player1.stars <= stars)
     }
 }

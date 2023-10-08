@@ -8,11 +8,8 @@ import model.norma.INorma
  * Players have a victories counter, it might be use to increase the norma level.
  *
  * Victories are obtained by winning battles, and the number of victories earned in combat
- * will depend on the type of enemy faced:
+ * will depend on the type of enemy faced.
  *
- * 1 Victory if the unit defeated was a Wild Unit.
- *
- * 2 Victories if the unit defeated was other player.
  *
  * When a character is defeated and enters the K.O. state, they will enter a phase called Recovery,
  * during which the player cannot take their turn.
@@ -25,13 +22,13 @@ trait IPlayer extends IUnit with INorma {
     /** Returns the current amount of victories */
     def victories: Int
 
-    /** Adds victories to the player.
+    /** Sets a new value of victories
      *
-     * The number of victories added depend on the enemy faced.
+     * @param newAmount The new value of victories.
      *
-     * @param unit The enemy.
+     * @return True if the new value has been successfully set.
      */
-    def addVictories(unit: IUnit): Unit
+    def victories_=(newAmount: Int): Boolean
 
     /** Returns true if the player has been knockout */
     def isKO: Boolean
@@ -43,6 +40,4 @@ trait IPlayer extends IUnit with INorma {
      */
     def recovery(required: Int): Unit
 
-    /** Rolls a dice and returns a value between 1 to 6. */
-    def rollDice(): Int
 }

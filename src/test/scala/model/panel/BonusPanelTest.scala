@@ -22,10 +22,10 @@ class BonusPanelTest extends munit.FunSuite {
         val neutralPanel: Panel = new NeutralPanel
         val stars: Int = player1.stars
 
-        neutralPanel.effect(player1)
+        neutralPanel.apply(player1)
         assert(player1.stars == stars)
 
-        bonusPanel.effect(player1)
+        bonusPanel.apply(player1)
         assert(player1.stars > stars)
     }
 }

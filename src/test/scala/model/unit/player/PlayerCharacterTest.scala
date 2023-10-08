@@ -48,61 +48,45 @@ class PlayerCharacterTest extends munit.FunSuite {
         assertEquals(character.evasion, evasion)
     }
 
-    // Two ways to test randomness (you can use any of them):
 
-    // 1. Test invariant properties, e.g. the result is always between 1 and 6.
-    test("A character should be able to roll a dice") {
-        for (_ <- 1 to 10) {
-            assert(character.rollDice >= 1 && character.rollDice <= 6)
-        }
-    }
-
-    // 2. Set a seed and test the result is always the same.
-    // A seed sets a fixed succession of random numbers, so you can know that the next numbers
-    // are always the same for the same seed.
-    test("A character should be able to roll a dice with a fixed seed") {
-        val other =
-        new PlayerCharacter(name, maxHp, attack, defense, evasion, new Random(11))
-        for (_ <- 1 to 10) {
-            assertEquals(character.rollDice(), other.rollDice())
-        }
-    }
-
-    test("The amount of points of victories depends of the unit defeated"){
-        val character2: PlayerCharacter = new PlayerCharacter("player1",1,1,1,1)
-
-        val otherPlayer: IUnit = new PlayerCharacter("player2",1,1,1,1)
-        val wildUnit: IUnit = new Chicken()
-
-        character.addVictories(otherPlayer)
-        assertEquals(character.victories, 2)
-
-        character2.addVictories(wildUnit)
-        assertEquals(character2.victories, 1)
-    }
-
-    test("If the player defeats another player, then the Victories counter increases in 2 points"){
-        val player2: IUnit = new PlayerCharacter(name="player2",maxHp,attack,defense,evasion)
-        val victories: Int = character.victories
-        character.addVictories(player2)
-        assertEquals(character.victories, victories+2)
-    }
-
-    test("If the player defeats a wildUnit, then the Victories counter increases in 1 point"){
-        val wildUnit: IUnit = new Chicken
-        val victories: Int = character.victories
-        character.addVictories(wildUnit)
-        assertEquals(character.victories, victories+1)
-    }
 
     test("If a character's hp reaches 0, then the character will be KO"){
-        character.reduceHp(character.maxHp+1)
+        character.hp -= character.maxHp+1
         assert(character.isKO)
     }
 
     test("The player must roll a die and obtain a number greater than or equal to the required amount to recover"){
-        character.reduceHp(character.maxHp+1)
-        character.recovery(0)
+        character.hp = 0
+        assert(character.isKO)
+        character.recovery(required=0)
         assert(!character.isKO)
     }
+
+    test("If the player defeats a wildUnit, the player should receive 1 victory"){
+        val unit: IUnit = new Chicken
+        val prevVictories: Int = character.victories
+        unit.hp = 0     // hp == 0 => has been defeated
+        assertEquals(unit.hp, 0)
+        assert(unit.defeated(character))
+        assertEquals(character.victories, prevVictories + 1)
+    }
+
+    test("If the player defeats another player, the player should receive 2 victories"){
+        val otherPlayer: IUnit = new PlayerCharacter(name="John Doe", maxHp, attack, defense, evasion)
+        val prevVictories: Int = character.victories
+        otherPlayer.hp = 0    // hp == 0 => has been defeated
+        assert(otherPlayer.defeated(character))
+        assertEquals(character.victories, prevVictories + 2)
+    }
+
+    test("If the player receives an attack, the player should be able to defend or evade"){
+        val unit: IUnit = new Chicken(name="Huevito Rey")
+        val attack: Int = unit.attack + unit.rollDice()
+        val prevHp: Int = character.hp
+        character.receiveAttack(attack)
+        assert(character.hp <= prevHp)
+
+
+    }
+
 }

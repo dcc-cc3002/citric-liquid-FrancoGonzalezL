@@ -47,10 +47,8 @@ class PlayerCharacter(override val name: String,
                       override val attack: Int,
                       override val defense: Int,
                       override val evasion: Int,
-
-                     /** The number generator used for the rollDice method */
-                      val randomNumberGenerator: Random = new Random())
-    extends AUnit(maxHp) with IPlayer {
+                      randomNumberGenerator: Random = new Random())
+    extends AUnit(maxHp, randomNumberGenerator) with IPlayer {
 
     /** Victories counter. */
     private var _victories: Int = 0
@@ -59,19 +57,24 @@ class PlayerCharacter(override val name: String,
     private var ko: Boolean = false
 
     /** Norma of the player */
-    private val Norma: INorma = new Norma(this)
+    private val _Norma: INorma = new Norma(player=this)
 
     override def victories: Int = _victories
 
-    /* Provisional method */
-    override def addVictories(unit: IUnit): Unit = {
-        if(unit.isInstanceOf[WildUnit])
-            _victories += 1
-        if(unit.isInstanceOf[PlayerCharacter])
-            _victories += 2
+    override def victories_=(newAmount: Int): Boolean = {
+        _victories = math.max(0, newAmount)
+        true
     }
 
-    override def rollDice(): Int = randomNumberGenerator.nextInt(6) + 1
+    override def defeated(player: IPlayer): Boolean = {
+        if(hp > 0) false
+        else{
+            player.victories += 2
+            player.stars += stars/2
+            this.stars    = stars/2
+            true
+        }
+    }
 
     override def isKO: Boolean = ko
 
@@ -83,8 +86,8 @@ class PlayerCharacter(override val name: String,
      *
      * When a players HP is 0, the ko var sets to true.
      */
-    override def reduceHp(amount: Int): Unit = {
-        super.reduceHp(amount)
+    override def hp_=(amount: Int): Unit = {
+        super.hp_=(amount)
         if(this.hp == 0)
             ko = true
     }
@@ -94,13 +97,25 @@ class PlayerCharacter(override val name: String,
             ko = false
     }
 
-    override def norma: Int = Norma.norma
+    override def norma: Int = _Norma.norma
 
-    override def goal: String = Norma.goal
+    override def goal: String = _Norma.goal
 
     override def goal_=(option: String): Boolean = {
-        Norma.goal = option
+        _Norma.goal = option
     }
 
-    override def normaCheck(panel: Panel): Boolean = Norma.normaCheck(panel: Panel)
+    override def normaCheck(panel: Panel): Boolean = _Norma.normaCheck(panel: Panel)
+
+    override def receiveAttack(attack: Int): Boolean = {
+        //It should give the player the choice to evade or defend.
+        //...provisional method!!!...
+        val rand: Int = rollDice()
+        if(rand > 3)
+            evade(attack)
+        else
+            defend(attack)
+    }
+
+
 }

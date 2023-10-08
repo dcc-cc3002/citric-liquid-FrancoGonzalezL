@@ -21,15 +21,15 @@ class EncounterPanelTest extends munit.FunSuite {
 
     test("The effect of panel will generate a random Unit"){
         assert(encounterPanel.wildUnit.isEmpty)
-        encounterPanel.effect(player1)
+        encounterPanel.apply(player1)
         assert(encounterPanel.wildUnit.isDefined)
     }
 
     test("The wildUnits will remain on the panel until they are defeated"){
-        encounterPanel.effect(player1)
+        encounterPanel.apply(player1)
         val first_wildUnit: IUnit = encounterPanel.wildUnit.get
-        encounterPanel.wildUnit.get.reduceHp(100)
-        encounterPanel.effect(player1)
+        encounterPanel.wildUnit.get.hp -= 10
+        encounterPanel.apply(player1)
         assertNotEquals(first_wildUnit, encounterPanel.wildUnit.get)
     }
 }

@@ -41,7 +41,7 @@ class EncounterPanel extends APanel {
      *
      * @param player The player that has moved to this Panel.
      */
-    override def effect(player: IPlayer): Boolean = {
+    override def apply(player: IPlayer): Boolean = {
         if(!unitIsAlive())
             setUnit()
         true
