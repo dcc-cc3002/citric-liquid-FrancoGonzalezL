@@ -15,18 +15,23 @@ import model.unit.player.IPlayer
  * @author [[https://github.com/FrancoGonzalezL Franco González L.]]
  */
 trait Panel {
+
     /** Returns the type of the Panel.
      *
      * The type of the Panel is the name of the class.
      */
     def panelType: String
 
+    /** Returns True if a player is on the Panel. */
     def containsCharacter(character: IPlayer): Boolean
 
+    /** Returns the current amount of players on the Panel. */
     def charactersCount: Int
 
-    def isPrevTo(otherPanel: Panel): Boolean
+    /** Returns True if otherPanel is on the nextPanels list. */
+    def containsNextPanel(otherPanel: Panel): Boolean
 
+    /** Returns the current amount of nextPanels on this Panel. */
     def nextPanelsCount: Int
 
     /** Adds a character to the list of characters currently on this panel.
@@ -56,7 +61,15 @@ trait Panel {
      */
     def addNextPanel(otherPanel: Panel): Boolean
 
-    /**The effect of the Panel in a player.
+    /** Removes a nextPanel from the list of nextPanels on this panel.
+     *
+     * otherPanel can only be removed if it's on the list.
+     *
+     * @param otherPanel The nextPanel to remove from this panel.
+     */
+    def removeNextPanel(otherPanel: Panel): Boolean
+
+    /** The effect of the Panel in a player.
      *
      * This might be invoked when a player moves to this panel.
      *

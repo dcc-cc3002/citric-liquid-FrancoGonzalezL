@@ -8,7 +8,7 @@ import model.unit.player.IPlayer
  * This panel will take away stars from the player.
  *
  * When landing on one, the player must roll a 6-sided die and will
- * lose a number of stars equal to roll*norma.
+ * lose a number of stars equal to roll*.
  */
 class DropPanel extends APanel {
 
@@ -19,7 +19,7 @@ class DropPanel extends APanel {
      */
     override def apply(player: IPlayer): Boolean = {
         val roll: Int = player.rollDice()
-        player.stars -= roll*player.norma
+        player.stars -= roll*player.normaLvl
         true
     }
 }

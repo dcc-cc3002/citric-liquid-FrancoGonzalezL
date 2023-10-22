@@ -2,6 +2,7 @@ package cl.uchile.dcc.citric
 package model.norma
 
 import model.panel.Panel
+import model.norma.goals.IGoal
 
 /** Represents the Norma of the player.
  *
@@ -14,20 +15,26 @@ import model.panel.Panel
  *
  * A player has to achieve Norma 6 to win the game.
  */
-trait INorma {
+trait INorma extends HasGoal {
 
-    /** Returns the current Norma level */
-    def norma: Int
-
-    /** Returns the current goal of the player */
-    def goal: String
-
-    /** Updates the goal of the player.
+    /** The value of required stars.
      *
-     * @param option The goal selected by the player. It Must be
-     *               either 'Stars' or 'Victories'.
+     *  Should depend on the lvl of the Norma.
      */
-    def goal_=(option: String): Boolean
+    protected def starsRequired: Int
+
+    /** The value of required victories.
+     *
+     *  Should depend on the lvl of the Norma.
+     */
+    protected def victoriesRequired: Int
+
+    /** A Norma 1 level above the current  lvl.
+     *
+     * @return A new Norma.
+     */
+    protected def nextNormaLvl: INorma
+
 
     /** Checks if the player has achieved the requirements to level up the Norma.
      *
@@ -40,8 +47,7 @@ trait INorma {
      * otherwise, it returns false.
      *
      * @param panel The panel where the player is located.
-     *
      * @return True if the norma level has successfully increased.
      */
-    def normaCheck(panel: Panel): Boolean
+    def normaCheck(panel: Panel): Option[INorma]
 }

@@ -19,4 +19,6 @@ class Seagull(
     override val attack:  Int =  1
     override val defense: Int = -1
     override val evasion: Int = -1
+
+    override def extraStars: Int = 2
 }

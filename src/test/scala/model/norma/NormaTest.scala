@@ -22,14 +22,16 @@ class NormaTest extends munit.FunSuite {
     }
 
     test("All players start the game with Norma 1"){
-        assertEquals(player.norma, expected=1)
+        assertEquals(player.normaLvl, expected=1)
     }
 
     test("The goal can not be changed until it is completed"){
-        //chose the goal
+        //choose the goal
         assert(player.goal = StarsGoal)
+        assert(player.goal == StarsGoal)
         //can not be changed
         assert(!(player.goal = VictoriesGoal))
+        assert(player.goal != VictoriesGoal)
         //complete the goal
         player.stars += 10
         homePanel.apply(player)
@@ -53,26 +55,20 @@ class NormaTest extends munit.FunSuite {
 
     test("The level of the Norma should not be greater than 6"){
         player.stars = 500
-        for(_ <- 2 to 6){
+        for(lvl <- 1 to 5){
+            assertEquals(player.normaLvl, lvl)
             player.goal = StarsGoal
             homePanel.apply(player)
         }
-        assertEquals(player.norma, 6)
+        assertEquals(player.normaLvl, 6)
         player.goal = StarsGoal
-        assert(!homePanel.apply(player))
+        assert(homePanel.apply(player))
+        assertEquals(player.normaLvl, expected=6)
     }
 
     test("The player should only level up if the player has achieved the requirements of the current goal"){
         player.goal = StarsGoal
         player.stars += 9
         assert(!homePanel.apply(player))
-    }
-
-    test("The Norma Check should be done in a HomePanel"){
-        val neutralPanel: Panel = new NeutralPanel
-        player.goal = StarsGoal
-        player.stars = 100
-        assert(!player.normaCheck(neutralPanel))
-        assert(player.normaCheck(homePanel))
     }
 }

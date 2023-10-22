@@ -70,7 +70,16 @@ class PanelTest extends munit.FunSuite {
     }
 
     test("A Panel should not be linked to itself"){
-        assert(!neutralPanel.isPrevTo(neutralPanel))
+        assert(!neutralPanel.containsNextPanel(neutralPanel))
         assert(!neutralPanel.addNextPanel(neutralPanel))
+    }
+
+    test("otherPanel should not be added nor removed twice"){
+        assert(neutralPanel.addNextPanel(dropPanel))
+        assert(!neutralPanel.addNextPanel(dropPanel))
+
+        assert(neutralPanel.addNextPanel(homePanel))
+        assert(neutralPanel.removeNextPanel(homePanel))
+        assert(!neutralPanel.removeNextPanel(homePanel))
     }
 }

@@ -3,7 +3,7 @@ package model.unit.player
 
 import model.unit.wildunit.WildUnit
 import model.unit.{AUnit, IUnit}
-import model.norma.{INorma, Norma}
+import model.norma.{ANorma, INorma, NormaLvl1}
 import model.panel.Panel
 
 import scala.util.Random
@@ -57,7 +57,7 @@ class PlayerCharacter(override val name: String,
     private var ko: Boolean = false
 
     /** Norma of the player */
-    private val _Norma: INorma = new Norma(player=this)
+    private var _Norma: INorma = new NormaLvl1(player=this)
 
     override def victories: Int = _victories
 
@@ -97,15 +97,22 @@ class PlayerCharacter(override val name: String,
             ko = false
     }
 
-    override def norma: Int = _Norma.norma
-
     override def goal: String = _Norma.goal
+
+    override def normaLvl: Int = _Norma.normaLvl
 
     override def goal_=(option: String): Boolean = {
         _Norma.goal = option
     }
 
-    override def normaCheck(panel: Panel): Boolean = _Norma.normaCheck(panel: Panel)
+    override def normaCheck(panel: Panel): Boolean = {
+        val newNorma: Option[INorma] = _Norma.normaCheck(panel)
+        if(newNorma.isDefined){
+            _Norma = newNorma.get
+            true
+        }else
+            false
+    }
 
     override def receiveAttack(attack: Int): Boolean = {
         //It should give the player the choice to evade or defend.

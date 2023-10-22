@@ -26,6 +26,7 @@ abstract class APanel extends Panel {
      */
     private val nextPanels: ArrayBuffer[Panel] = new ArrayBuffer[Panel]()
 
+
     override def containsCharacter(character: IPlayer): Boolean = {
         if (characters.indexOf(character) == -1)
             false
@@ -35,7 +36,7 @@ abstract class APanel extends Panel {
 
     override def charactersCount: Int = characters.size
 
-    override def isPrevTo(otherPanel: Panel): Boolean = {
+    override def containsNextPanel(otherPanel: Panel): Boolean = {
         if(nextPanels.indexOf(otherPanel) == -1)
             false
         else
@@ -64,10 +65,19 @@ abstract class APanel extends Panel {
 
     override def addNextPanel(otherPanel: Panel): Boolean = {
         /*  Can not link to itself, nor can add the same panel twice. */
-        if (this == otherPanel || this.isPrevTo(otherPanel))
+        if (this == otherPanel || this.containsNextPanel(otherPanel))
             false
         else{
             nextPanels.addOne(otherPanel)
+            true
+        }
+    }
+
+    override def removeNextPanel(otherPanel: Panel): Boolean = {
+        if (!this.containsNextPanel(otherPanel)) false
+        else{
+            val index = nextPanels.indexOf(otherPanel)
+            nextPanels.remove(index)
             true
         }
     }

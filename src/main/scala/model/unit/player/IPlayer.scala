@@ -1,7 +1,9 @@
 package cl.uchile.dcc.citric
 package model.unit
 package player
-import model.norma.INorma
+
+import model.norma.HasGoal
+import model.panel.Panel
 
 /** Represents a Player.
  *
@@ -17,7 +19,7 @@ import model.norma.INorma
  * To exit this phase, the player must roll a die and obtain a quantity greater than or equal to
  * the required amount for recovery. If they succeed in recovering, then they can immediately take their turn.
  */
-trait IPlayer extends IUnit with INorma {
+trait IPlayer extends IUnit with HasGoal {
 
     /** Returns the current amount of victories */
     def victories: Int
@@ -40,4 +42,6 @@ trait IPlayer extends IUnit with INorma {
      */
     def recovery(required: Int): Unit
 
+
+    def normaCheck(panel: Panel): Boolean
 }

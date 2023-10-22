@@ -97,7 +97,7 @@ trait IUnit {
      *
      *  If the unit defeated was a WildUnit, then:
      *  - Adds 1 victory to the winner.
-     *  - Gives all of the unit's stars to the winner.
+     *  - Gives all of the unit's stars to the winner, plus the bonus of the wildUnit.
      *
      *  If the unit defeated was a Player, then:
      *  - Adds 2 victories to the winner.

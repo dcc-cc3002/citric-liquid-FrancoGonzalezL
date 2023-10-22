@@ -19,7 +19,7 @@ class BonusPanel extends APanel {
      */
     override def apply(player: IPlayer): Boolean = {
         val roll: Int = player.rollDice()
-        val amount: Int = math.min(roll*player.norma, roll*3)
+        val amount: Int = math.min(roll*player.normaLvl, roll*3)
         player.stars += amount
         true
     }
