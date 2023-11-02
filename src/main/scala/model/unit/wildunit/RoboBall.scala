@@ -14,11 +14,11 @@ import util.Random
 class RoboBall(
               override val name: String = "RoboBall",
               RandomNumberGenerator: Random = new Random()
-              ) extends WildUnit(hpInitVal=3, RandomNumberGenerator) {
+              ) extends AWildUnit(hpInitVal=3, RandomNumberGenerator) {
     override val maxHp:   Int =  3
     override val attack:  Int = -1
     override val defense: Int =  1
     override val evasion: Int = -1
 
-    override def extraStars: Int = 2
+    override def bonusStars: Int = 2
 }

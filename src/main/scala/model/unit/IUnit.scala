@@ -2,6 +2,7 @@ package cl.uchile.dcc.citric
 package model.unit
 
 import player.IPlayer
+import wildunit.IWildUnit
 
 /** Represents the entities tha will participate int the game,
  * either as a character, controllable by the user, or as a
@@ -89,22 +90,36 @@ trait IUnit {
     /** Rolls a dice and returns a value between 1 to 6. */
     def rollDice(): Int
 
-    /** This might be invoked when a player has won a fight.
+    /** This might be invoked when a unit has won a fight.
      *
      *  To call this method, the unit should have been defeated (0 hp).
      *
-     *  This method should give stars and victories to the winner of the fight.
-     *
-     *  If the unit defeated was a WildUnit, then:
-     *  - Adds 1 victory to the winner.
-     *  - Gives all of the unit's stars to the winner, plus the bonus of the wildUnit.
-     *
-     *  If the unit defeated was a Player, then:
-     *  - Adds 2 victories to the winner.
-     *  - Gives half of the player's stars to the winner.
+
      *
      *  @return True if the unit has been defeated. False if the method
      *          has been called and the unit has hp > 0.
      */
-    def defeated(player: IPlayer): Boolean
+    def defeated(attacker: IUnit): Boolean
+
+    /** This might be invoked when a unit has won against a player.
+     *
+     *  - Adds 2 victories to the winner.
+     *  - Gives half of the player's stars to the winner.    *
+     *
+     * @param defeated The player that has been defeated.
+     *
+     * @return True if the reward has been delivered successfully.
+     */
+    def getRewardFromPlayer(defeated: IPlayer): Boolean
+
+    /** This might be invoked when a unit has won against a WildUnit.
+     *
+     *  - Adds 1 victory to the winner.
+     *  - Gives all of the unit's stars to the winner, plus the bonus of the wildUnit.
+     *
+     * @param defeated The WildUnit that has been defeated.
+     *
+     * @return True if the reward has been delivered successfully.
+     */
+    def getRewardFromWildUnit(defeated: IWildUnit): Boolean
 }

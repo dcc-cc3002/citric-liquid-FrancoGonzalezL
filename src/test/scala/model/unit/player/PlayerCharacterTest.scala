@@ -85,8 +85,43 @@ class PlayerCharacterTest extends munit.FunSuite {
         val prevHp: Int = character.hp
         character.receiveAttack(attack)
         assert(character.hp <= prevHp)
-
-
     }
 
+    test("If a player defeats a wild unit, the player receives all the stars from the wild unit plus the bonus, and 1 victory"){
+        val wildUnit: IUnit = new Chicken("Pepe")
+
+        wildUnit.hp = 0
+        wildUnit.stars = 10
+        assertEquals(wildUnit.stars, 10)
+
+        val prevStarsPlayer: Int = character.stars
+        val prevVictories: Int = character.victories
+        val bonusChicken: Int = 3
+
+        val prevStarsWildUnit: Int = wildUnit.stars
+
+        wildUnit.defeated(character)
+
+        assertEquals(character.stars, prevStarsPlayer+prevStarsWildUnit+bonusChicken)
+        assertEquals(character.victories, prevVictories + 1)
+        assertEquals(wildUnit.stars, 0)
+    }
+
+    test("If a player defeats another Player, the player winner receives half the stars from the defeated player and 2 victories") {
+        val otherPlayer: IUnit = new PlayerCharacter("Pepe", maxHp, attack, defense, evasion)
+
+        otherPlayer.hp = 0
+        otherPlayer.stars = 11
+        assertEquals(otherPlayer.stars, 11)
+
+        val prevStarsPlayer: Int = character.stars
+        val prevVictories: Int = character.victories
+        val prevStarsOtherP: Int = otherPlayer.stars
+
+        otherPlayer.defeated(character)
+
+        assertEquals(character.stars, prevStarsPlayer + prevStarsOtherP/2)
+        assertEquals(character.victories, prevVictories + 2)
+        assertEquals(otherPlayer.stars, prevStarsOtherP -  prevStarsOtherP/2)
+    }
 }

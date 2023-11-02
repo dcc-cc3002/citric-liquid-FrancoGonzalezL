@@ -3,12 +3,12 @@ package model.unit
 
 import model.unit.wildunit.{Chicken, RoboBall}
 
-import model.unit.player.PlayerCharacter
+import model.unit.player.{PlayerCharacter, IPlayer}
 import util.Random
 
 class UnitTest extends munit.FunSuite {
     var unit: IUnit = _
-    var player: IUnit = _
+    var player: IPlayer = _
 
     val maxHp: Int = 10
     val attack: Int = 10

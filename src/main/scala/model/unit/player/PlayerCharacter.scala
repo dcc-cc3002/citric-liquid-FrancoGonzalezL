@@ -1,7 +1,7 @@
 package cl.uchile.dcc.citric
 package model.unit.player
 
-import model.unit.wildunit.WildUnit
+import model.unit.wildunit.IWildUnit
 import model.unit.{AUnit, IUnit}
 import model.norma.{ANorma, INorma, NormaLvl1}
 import model.panel.Panel
@@ -66,14 +66,11 @@ class PlayerCharacter(override val name: String,
         true
     }
 
-    override def defeated(player: IPlayer): Boolean = {
-        if(hp > 0) false
-        else{
-            player.victories += 2
-            player.stars += stars/2
-            this.stars    = stars/2
-            true
-        }
+    override def defeated(attacker: IUnit): Boolean = {
+        if(hp > 0) return false
+        /* A player always gives half of the stars and 2 victories. */
+        attacker.getRewardFromPlayer(defeated=this)
+        true
     }
 
     override def isKO: Boolean = ko
@@ -115,8 +112,6 @@ class PlayerCharacter(override val name: String,
     }
 
     override def receiveAttack(attack: Int): Boolean = {
-        //It should give the player the choice to evade or defend.
-        //...provisional method!!!...
         val rand: Int = rollDice()
         if(rand > 3)
             evade(attack)
@@ -124,5 +119,22 @@ class PlayerCharacter(override val name: String,
             defend(attack)
     }
 
+    override def getRewardFromWildUnit(defeated: IWildUnit): Boolean = {
+        if (defeated.hp > 0) return false
+
+        this.victories += 1
+        this.stars += defeated.stars + defeated.bonusStars
+        defeated.stars = 0
+        true
+    }
+
+    override def getRewardFromPlayer(defeated: IPlayer): Boolean = {
+        if (defeated.hp > 0) return false
+
+        this.victories += 2
+        this.stars += defeated.stars / 2
+        defeated.stars -= defeated.stars / 2
+        true
+    }
 
 }
