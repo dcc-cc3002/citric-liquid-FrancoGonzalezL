@@ -8,7 +8,7 @@ import wildunit.IWildUnit
  * either as a character, controllable by the user, or as a
  * Wild Unit, not controllable by the user
  *
- * @author [[https://github.com/FrancoGonzalezL Franco González L.]]
+ * @author [[https://github.com/frgonzal Franco González L.]]
  */
 trait IUnit {
 

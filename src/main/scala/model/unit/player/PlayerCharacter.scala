@@ -40,7 +40,7 @@ import scala.util.Random
   * @author [[https://github.com/joelriquelme/ Joel Riquelme P.]]
   * @author [[https://github.com/r8vnhill/ Ignacio Slater M.]]
   * @author [[https://github.com/Seivier/ Vicente González B.]]
-  * @author [[https://github.com/FrancoGonzalezL/ Franco González L.]]
+  * @author [[https://github.com/frgonzal/ Franco González L.]]
   */
 class PlayerCharacter(override val name: String,
                       override val maxHp: Int,
@@ -112,8 +112,9 @@ class PlayerCharacter(override val name: String,
     }
 
     override def receiveAttack(attack: Int): Boolean = {
-        val rand: Int = rollDice()
-        if(rand > 3)
+        //provisional method
+        //should give the player the option to defend or evade
+        if(attack > this.defense + 3)
             evade(attack)
         else
             defend(attack)

@@ -12,7 +12,6 @@ abstract class AWildUnit(hpInitVal: Int, random: Random) extends AUnit(hpInitVal
     override def defeated(attacker: IUnit): Boolean = {
         if(hp > 0) return false
         attacker.getRewardFromWildUnit(defeated=this)
-        true
     }
 
     override def getRewardFromWildUnit(defeated: IWildUnit): Boolean = {
@@ -32,12 +31,9 @@ abstract class AWildUnit(hpInitVal: Int, random: Random) extends AUnit(hpInitVal
     }
 
     override def receiveAttack(attack: Int): Boolean = {
-        val rand: Int = rollDice()
-        // random choice
-        if(rand > 3)
+        if(this.defense + 3 > this.attack)
             this.defend(attack)
         else
             this.evade(attack)
-        true
     }
 }
