@@ -1,5 +1,9 @@
 # 99.7% Citric Liquid
 
+## State diagram
+
+![State Diagram](docs/diagrama-estados.png)
+
 ## About
 
 `99.7% Citric Liquid` is a simplified clone of the renowned game, `100% Orange Juice`. Its main
