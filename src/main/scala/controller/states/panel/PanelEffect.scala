@@ -6,15 +6,15 @@ import controller.states.{Chapter, GameState}
 
 import cl.uchile.dcc.citric.controller.states.combat.AttackerChoosing
 
-class PanelEffect(controller: GameController) extends GameState {
+class PanelEffect(controller: GameController) extends GameState(controller) {
 
     override def nextTurn(): Unit = {
         /* do something */
-        this.changeState(controller, new Chapter(controller))
+        this.changeState(new Chapter(controller))
     }
 
     override def encounterPanelEffect(): Unit = {
         /* do something */
-        this.changeState(controller, new AttackerChoosing(controller))
+        this.changeState(new AttackerChoosing(controller))
     }
 }

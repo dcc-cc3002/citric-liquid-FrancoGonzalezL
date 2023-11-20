@@ -3,8 +3,8 @@ package controller.states
 
 import controller.GameController
 
-class GameState {
-    protected def changeState(controller: GameController, state: GameState): Unit = {
+class GameState(controller: GameController) {
+    protected def changeState(state: GameState): Unit = {
         controller.setState(state)
     }
 

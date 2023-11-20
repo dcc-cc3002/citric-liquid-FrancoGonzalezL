@@ -4,19 +4,19 @@ package controller.states.combat
 import controller.GameController
 import controller.states.{Chapter, GameState}
 
-class DefenderChoosing(controller: GameController) extends GameState {
+class DefenderChoosing(controller: GameController) extends GameState(controller) {
     override def evade(): Unit = {
         /* do something */
-        this.changeState(controller, new AttackerChoosing(controller))
+        this.changeState(new AttackerChoosing(controller))
     }
 
     override def defend(): Unit = {
         /* do something */
-        this.changeState(controller, new AttackerChoosing(controller))
+        this.changeState(new AttackerChoosing(controller))
     }
 
     override def deliverReward(): Unit = {
         /* do something */
-        this.changeState(controller, new Chapter(controller))
+        this.changeState(new Chapter(controller))
     }
 }

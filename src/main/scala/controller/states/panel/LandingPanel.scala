@@ -6,16 +6,16 @@ import controller.states.GameState
 
 import cl.uchile.dcc.citric.controller.states.combat.AttackerChoosingPvP
 
-class LandingPanel(controller: GameController) extends GameState {
+class LandingPanel(controller: GameController) extends GameState(controller) {
 
     override def pass(): Unit = {
         /* do something */
-        this.changeState(controller, new PanelEffect(controller))
+        this.changeState(new PanelEffect(controller))
     }
 
     override def choosePlayer(): Unit = {
         /* do something */
-        this.changeState(controller, new AttackerChoosingPvP(controller))
+        this.changeState(new AttackerChoosingPvP(controller))
     }
 
 

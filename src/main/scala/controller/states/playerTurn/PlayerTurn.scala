@@ -4,10 +4,10 @@ package controller.states.playerTurn
 import controller.GameController
 import controller.states.GameState
 
-class PlayerTurn(controller: GameController) extends GameState {
+class PlayerTurn(controller: GameController) extends GameState(controller) {
 
     override def rollDice(): Unit = {
         /* do something */
-        this.changeState(controller, new Moving(controller))
+        this.changeState(new Moving(controller))
     }
 }

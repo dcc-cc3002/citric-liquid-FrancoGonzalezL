@@ -6,20 +6,20 @@ import controller.states.GameState
 
 import cl.uchile.dcc.citric.controller.states.panel.LandingPanel
 
-class Moving(controller: GameController) extends GameState {
+class Moving(controller: GameController) extends GameState(controller) {
 
     override def choosePath(): Unit = {
         /* do something */
-        this.changeState(controller, new Moving(controller))
+        this.changeState(new Moving(controller))
     }
 
     override def stop(): Unit = {
         /* do something */
-        this.changeState(controller, new LandingPanel(controller))
+        this.changeState(new LandingPanel(controller))
     }
 
     override def noMovementsLeft(): Unit = {
         /* do something */
-        this.changeState(controller, new LandingPanel(controller))
+        this.changeState(new LandingPanel(controller))
     }
 }

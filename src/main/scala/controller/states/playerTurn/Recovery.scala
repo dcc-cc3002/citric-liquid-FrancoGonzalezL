@@ -4,16 +4,16 @@ package controller.states.playerTurn
 import controller.GameController
 import controller.states.{Chapter, GameState}
 
-class Recovery(controller: GameController) extends GameState {
+class Recovery(controller: GameController) extends GameState(controller) {
 
     override def requirementsAchieved(): Unit = {
         /* do something */
-        this.changeState(controller, new PlayerTurn(controller))
+        this.changeState(new PlayerTurn(controller))
     }
 
     override def requirementsNotAchieved(): Unit = {
         /* do something */
-        this.changeState(controller, new Chapter(controller))
+        this.changeState(new Chapter(controller))
     }
 }
 
