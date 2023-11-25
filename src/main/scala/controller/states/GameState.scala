@@ -1,37 +1,70 @@
 package cl.uchile.dcc.citric
 package controller.states
 
-import controller.GameController
+import controller.{GameChecks, GameController, GameTransitions}
+import exceptions.InvalidTransitionException
 
-class GameState(controller: GameController) {
+
+/** Represents a state of the Game.
+ *
+ *  This state has no possible transitions
+ *  and all the checks are set to false.
+ *
+ *  @param controller The Game Controller.
+ */
+class GameState(controller: GameController) extends GameTransitions with GameChecks {
+
+    /** This should be used to change the state of the Game.
+     *
+     *  @param state The new State of the Game.
+     */
     protected def changeState(state: GameState): Unit = {
         controller.setState(state)
     }
 
-    private def error() = throw new AssertionError("Wrong State")
+    /** The exception that should be thrown every time an invalid transition is attempted.
+     *
+     *  @param from The name of the State from which the transition is attempted.
+     */
+    private def exception(from: String) = throw new InvalidTransitionException(s"From $from")
 
-    def startGame(): Unit = error()
-    def finishGame(): Unit = error()
-    def nextChapter(): Unit = error()
-    def recoverPlayer(): Unit = error()
-    def requirementsAchieved(): Unit = error()
-    def requirementsNotAchieved(): Unit = error()
-    def play(): Unit = error()
-    def rollDice(): Unit = error()
-    def choosePath(): Unit = error()
-    def stop(): Unit = error()
-    def noMovementsLeft(): Unit = error()
-    def pass(): Unit = error()
-    def choosePlayer(): Unit = error()
-    def attack(): Unit = error()
-    def defend(): Unit = error()
-    def evade(): Unit = error()
-    def deliverReward(): Unit = error()
-    def encounterPanelEffect(): Unit = error()
-    def nextTurn(): Unit = error()
-    def playAgain(): Unit = error()
+    def startGame(): Unit = exception(this.getClass.getSimpleName)
+
+    def finishGame(): Unit = exception(this.getClass.getSimpleName)
+
+    def nextChapter(): Unit = exception(this.getClass.getSimpleName)
+
+    def recoverPlayer(): Unit = exception(this.getClass.getSimpleName)
+
+    def requirementsAchieved(): Unit = exception(this.getClass.getSimpleName)
+
+    def requirementsNotAchieved(): Unit = exception(this.getClass.getSimpleName)
+
+    def play(): Unit = exception(this.getClass.getSimpleName)
+
+    def rollDice(): Unit = exception(this.getClass.getSimpleName)
+
+    def choosePath(): Unit = exception(this.getClass.getSimpleName)
+
+    def stop(): Unit = exception(this.getClass.getSimpleName)
+
+    def noMovementsLeft(): Unit = exception(this.getClass.getSimpleName)
+
+    def pass(): Unit = exception(this.getClass.getSimpleName)
+
+    def choosePlayer(): Unit = exception(this.getClass.getSimpleName)
+
+    def finishCombat(): Unit = exception(this.getClass.getSimpleName)
+
+    def encounterPanelEffect(): Unit = exception(this.getClass.getSimpleName)
+
+    def nextTurn(): Unit = exception(this.getClass.getSimpleName)
+
+    def playAgain(): Unit = exception(this.getClass.getSimpleName)
 
 
-    def isStarting(): Boolean = false
-    def hasFinished(): Boolean = false
+    def isStarting: Boolean = false
+
+    def hasFinished: Boolean = false
+
 }

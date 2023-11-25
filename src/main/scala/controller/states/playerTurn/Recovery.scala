@@ -4,6 +4,8 @@ package controller.states.playerTurn
 import controller.GameController
 import controller.states.{Chapter, GameState}
 
+/** When a player is K.O, the player has to recover before playing.
+ */
 class Recovery(controller: GameController) extends GameState(controller) {
 
     override def requirementsAchieved(): Unit = {

@@ -4,8 +4,10 @@ package controller.states.panel
 import controller.GameController
 import controller.states.{Chapter, GameState}
 
-import cl.uchile.dcc.citric.controller.states.combat.AttackerChoosing
+import controller.states.combat.CombatPvsWU
 
+/** When a player lands on a Panel, the Panel has to active its effect on the player.
+ */
 class PanelEffect(controller: GameController) extends GameState(controller) {
 
     override def nextTurn(): Unit = {
@@ -15,6 +17,6 @@ class PanelEffect(controller: GameController) extends GameState(controller) {
 
     override def encounterPanelEffect(): Unit = {
         /* do something */
-        this.changeState(new AttackerChoosing(controller))
+        this.changeState(new CombatPvsWU(controller))
     }
 }

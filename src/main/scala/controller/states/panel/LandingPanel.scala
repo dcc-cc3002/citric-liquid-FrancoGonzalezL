@@ -4,8 +4,11 @@ package controller.states.panel
 import controller.GameController
 import controller.states.GameState
 
-import cl.uchile.dcc.citric.controller.states.combat.AttackerChoosingPvP
+import controller.states.combat.CombatPvsP
 
+/** When landing on a Panel, the player can choose to attack another
+ *  player or continue with the Game.
+ */
 class LandingPanel(controller: GameController) extends GameState(controller) {
 
     override def pass(): Unit = {
@@ -15,7 +18,7 @@ class LandingPanel(controller: GameController) extends GameState(controller) {
 
     override def choosePlayer(): Unit = {
         /* do something */
-        this.changeState(new AttackerChoosingPvP(controller))
+        this.changeState(new CombatPvsP(controller))
     }
 
 
