@@ -88,7 +88,6 @@ class ControllerTest extends munit.FunSuite {
             (g: GameController) => g.startGame(),
             (g: GameController) => g.requirementsAchieved(),
             (g: GameController) => g.requirementsNotAchieved(),
-            (g: GameController) => g.play(),
             (g: GameController) => g.rollDice(),
             (g: GameController) => g.choosePath(),
             (g: GameController) => g.stop(),
