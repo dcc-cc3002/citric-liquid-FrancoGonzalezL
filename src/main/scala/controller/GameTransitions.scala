@@ -36,7 +36,7 @@ trait GameTransitions {
 
     /** play is called to commence a player's turn.
      */
-    def play(): Unit
+    def playTurn(): Unit
 
     /** rollDice is called when a player's turn involves rolling dice to determine
      *  the outcome of an action or movement.

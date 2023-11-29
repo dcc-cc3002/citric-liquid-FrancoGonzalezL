@@ -35,7 +35,7 @@ class ControllerTest extends munit.FunSuite {
             (g: GameController) => g.recoverPlayer(),
             (g: GameController) => g.requirementsAchieved(),
             (g: GameController) => g.requirementsNotAchieved(),
-            (g: GameController) => g.play(),
+            (g: GameController) => g.playTurn(),
             (g: GameController) => g.rollDice(),
             (g: GameController) => g.choosePath(),
             (g: GameController) => g.stop(),
@@ -65,7 +65,7 @@ class ControllerTest extends munit.FunSuite {
             (g: GameController) => g.finishGame(),
             (g: GameController) => g.nextChapter(),
             (g: GameController) => g.recoverPlayer(),
-            (g: GameController) => g.play(),
+            (g: GameController) => g.playTurn(),
         )
         validTransitionsList.foreach(f => {
             try {

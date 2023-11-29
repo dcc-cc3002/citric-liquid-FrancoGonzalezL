@@ -13,13 +13,16 @@ import controller.states.playerTurn.{PlayerTurn, Recovery}
  *  - A player can begin its turn or recover.
  */
 class Chapter(controller: GameController) extends GameState(controller) {
+    override def play(): Unit = {
+
+    }
 
     override def finishGame(): Unit = {
         /* do something */
         this.changeState(new EndGame(controller))
     }
 
-    override def play(): Unit = {
+    override def playTurn(): Unit = {
         /* do something */
         this.changeState(new PlayerTurn(controller))
     }

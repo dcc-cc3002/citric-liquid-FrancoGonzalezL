@@ -3,6 +3,9 @@ package controller
 
 import controller.states.startAndEnd.PreGame
 import states._
+import model.unit.player.IPlayer
+
+import collection.mutable.Queue
 
 /** Represent The Game.
  *
@@ -26,6 +29,14 @@ import states._
  */
 class GameController extends GameTransitions with GameChecks {
 
+    private var _characters: Queue[IPlayer] = Queue()
+
+    /** Returns the Player that has to play its turn. */
+    def character(): IPlayer = _characters.front
+
+    /** Rotates the List of characters, useful to change Player Turns. */
+    def rotateCharacters(): Unit = _characters.enqueue(_characters.dequeue())
+
     /** Initial Game State */
     var state: GameState = new PreGame(this)
 
@@ -36,6 +47,9 @@ class GameController extends GameTransitions with GameChecks {
     def setState(newState: GameState): Unit = {
         state = newState
     }
+
+    /** Depends on the state.*/
+    def play(): Unit = state.play()
 
     def startGame(): Unit = state.startGame()
 
@@ -49,7 +63,7 @@ class GameController extends GameTransitions with GameChecks {
 
     def requirementsNotAchieved(): Unit = state.requirementsNotAchieved()
 
-    def play(): Unit = state.play()
+    def playTurn(): Unit = state.playTurn()
 
     def rollDice(): Unit = state.rollDice()
 

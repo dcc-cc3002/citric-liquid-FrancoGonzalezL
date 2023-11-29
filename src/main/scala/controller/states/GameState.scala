@@ -22,6 +22,9 @@ class GameState(controller: GameController) extends GameTransitions with GameChe
         controller.setState(state)
     }
 
+    /** This functions contains all the tasks the controller must perform while in this state.*/
+    def play(): Unit = throw new AssertionError(s"Play is Not Defined for ${this.getClass.getSimpleName}")
+
     /** The exception that should be thrown every time an invalid transition is attempted.
      *
      *  @param from The name of the State from which the transition is attempted.
@@ -40,7 +43,7 @@ class GameState(controller: GameController) extends GameTransitions with GameChe
 
     def requirementsNotAchieved(): Unit = exception(this.getClass.getSimpleName)
 
-    def play(): Unit = exception(this.getClass.getSimpleName)
+    def playTurn(): Unit = exception(this.getClass.getSimpleName)
 
     def rollDice(): Unit = exception(this.getClass.getSimpleName)
 
