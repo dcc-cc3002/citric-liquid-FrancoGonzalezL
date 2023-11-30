@@ -8,9 +8,11 @@ import controller.states.{Chapter, GameState}
  *  should initialize all the variables to play the game.
  */
 class PreGame(controller: GameController) extends GameState(controller) {
-    override def startGame(): Unit = {
-        /* Do something */
+
+    override def startGame(debug: Boolean = false): Unit = {
+        controller.debug_=(debug)
         this.changeState(new Chapter(controller))
     }
-    override def isStarting(): Boolean = true
+
+    override def isStarting: Boolean = true
 }

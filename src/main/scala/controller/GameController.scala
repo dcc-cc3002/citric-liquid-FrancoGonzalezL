@@ -3,9 +3,14 @@ package controller
 
 import controller.states.startAndEnd.PreGame
 import states._
+import states.startAndEnd._
 import model.unit.player.IPlayer
-
-import collection.mutable.Queue
+import model.panel.Panel
+import observer.{ISubject, Observer}
+import exceptions.InvalidInputException
+import scala.io.StdIn
+import scala.collection.mutable
+import scala.util.Random
 
 /** Represent The Game.
  *
@@ -27,59 +32,76 @@ import collection.mutable.Queue
  *
  *  @author [[https://github.com/frgonzal/ Franco González L.]]
  */
-class GameController extends GameTransitions with GameChecks {
-
-    private var _characters: Queue[IPlayer] = Queue()
-
-    /** Returns the Player that has to play its turn. */
-    def character(): IPlayer = _characters.front
-
-    /** Rotates the List of characters, useful to change Player Turns. */
-    def rotateCharacters(): Unit = _characters.enqueue(_characters.dequeue())
+class GameController extends GameTransitions with GameChecks with Observer[IPlayer] {
 
     /** Initial Game State */
-    var state: GameState = new PreGame(this)
+    private var state: GameState = new PreGame(this)
+
+    private val _characters: mutable.Queue[IPlayer] = mutable.Queue()
+    private var _chapter: Int = 0
+    private var _turn: Int = 0
+    private var _panels: Map[IPlayer, Panel] = Map()
+    private var debug: Boolean = false
 
     /** This function should be called every time the Game State changes.
      *
      * @param newState This is the new State of the Game.
      */
-    def setState(newState: GameState): Unit = {
+    protected[controller] def setState(newState: GameState): Unit = {
         state = newState
     }
 
-    /** Depends on the state.*/
-    def play(): Unit = state.play()
+    def turn: Int = _turn
 
-    def startGame(): Unit = state.startGame()
+    def chapter: Int = _chapter
+
+    /** Returns the Player that has to play its turn. */
+    protected[controller] def currentCharacter: IPlayer = _characters.front
+
+    protected[controller] def currentPanel: Panel = {
+        val panel: Option[Panel] = _panels.get(this.currentCharacter)
+        if (panel.isDefined) panel.get
+        else throw new AssertionError("Player is Not associated with a Panel")
+    }
+
+    protected[controller] def advanceChapter(): Unit = {
+        val msgChapter: String = s"Chapter ${_chapter}"
+        sendMsg(msgChapter)
+        _chapter += 1
+    }
+
+    protected[controller] def moveCharacterToPanel(panel: Panel): Unit = {
+        if (!currentPanel.containsNextPanel(panel))
+            throw new AssertionError("Player is not allowed to move to this Panel")
+
+        currentPanel.removeCharacter(currentCharacter)
+        panel.addCharacter(currentCharacter)
+        _panels = _panels + (currentCharacter -> panel)
+    }
+
+    /** Rotates the List of characters, useful to change Player Turns. */
+    protected[controller] def rotateCharacters(): Unit = {
+        _characters.enqueue(_characters.dequeue())
+        _turn = (this.turn+1) % 4
+    }
+
+
+    /** Depends on the state.*/
+    protected[controller] def play(): Unit = state.play()
+
+    def startGame(debug: Boolean = false): Unit = state.startGame(debug)
 
     def finishGame(): Unit = state.finishGame()
 
-    def nextChapter(): Unit = state.nextChapter()
-
     def recoverPlayer(): Unit = state.recoverPlayer()
-
-    def requirementsAchieved(): Unit = state.requirementsAchieved()
-
-    def requirementsNotAchieved(): Unit = state.requirementsNotAchieved()
 
     def playTurn(): Unit = state.playTurn()
 
-    def rollDice(): Unit = state.rollDice()
-
-    def choosePath(): Unit = state.choosePath()
-
     def stop(): Unit = state.stop()
-
-    def noMovementsLeft(): Unit = state.noMovementsLeft()
-
-    def pass(): Unit = state.pass()
-
-    def choosePlayer(): Unit = state.choosePlayer()
 
     def finishCombat(): Unit = state.finishCombat()
 
-    def encounterPanelEffect(): Unit = state.encounterPanelEffect()
+    def encounterPanel(): Unit = state.encounterPanel()
 
     def nextTurn(): Unit = state.nextTurn()
 
@@ -88,4 +110,49 @@ class GameController extends GameTransitions with GameChecks {
     def isStarting: Boolean = state.isStarting
 
     def hasFinished: Boolean = state.hasFinished
+
+
+    /* Winner of the Game */
+    override def update(subject: ISubject[IPlayer], msg: IPlayer): Unit = {
+        val winner: IPlayer = msg
+        if (winner.normaLvl < 6) throw new AssertionError("The player should have Norma 6 to win the Game")
+
+        this.setState(new EndGame(this, winner))
+    }
+
+    protected[controller] def sendMsg(msg: String): Unit = {
+        if(!debug) println(msg)
+    }
+
+    protected[controller] def receiveInput(msg: String, numberOfOptions: Int): Int = {
+        sendMsg(msg)
+        var selected: Int = 1
+
+        if(!debug) selected = StdIn.readInt()
+        else       selected = new Random().nextInt(numberOfOptions) + 1
+
+        if( selected < 1 || selected > numberOfOptions)
+            throw new InvalidInputException(s"Input should be greater than 0 and less than $numberOfOptions")
+
+        selected
+    }
+
+    def run(debug: Boolean = false): Unit = {
+        if(!isStarting) throw new AssertionError("The Game has not started.")
+
+        while(!hasFinished)
+            play()
+        play()
+
+        val msg: String = "Play Again?"
+        val numberOfOptions: Int = 2
+        val selection: Int = receiveInput(msg, numberOfOptions)
+
+        if(selection == 1) run()
+        else sendMsg("Good Bye")
+    }
+
+    protected[controller] def debug_=(newDebug: Boolean): Unit = {
+        debug = newDebug
+    }
 }

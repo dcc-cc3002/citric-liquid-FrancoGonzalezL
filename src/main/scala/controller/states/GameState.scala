@@ -23,7 +23,7 @@ class GameState(controller: GameController) extends GameTransitions with GameChe
     }
 
     /** This functions contains all the tasks the controller must perform while in this state.*/
-    def play(): Unit = throw new AssertionError(s"Play is Not Defined for ${this.getClass.getSimpleName}")
+    def play(): Unit = throw new AssertionError(s"Play() is Not Defined for ${this.getClass.getSimpleName}")
 
     /** The exception that should be thrown every time an invalid transition is attempted.
      *
@@ -31,43 +31,25 @@ class GameState(controller: GameController) extends GameTransitions with GameChe
      */
     private def exception(from: String) = throw new InvalidTransitionException(s"From $from")
 
-    def startGame(): Unit = exception(this.getClass.getSimpleName)
+    def startGame(debug: Boolean = false): Unit = exception(this.getClass.getSimpleName)
 
     def finishGame(): Unit = exception(this.getClass.getSimpleName)
 
-    def nextChapter(): Unit = exception(this.getClass.getSimpleName)
-
     def recoverPlayer(): Unit = exception(this.getClass.getSimpleName)
-
-    def requirementsAchieved(): Unit = exception(this.getClass.getSimpleName)
-
-    def requirementsNotAchieved(): Unit = exception(this.getClass.getSimpleName)
 
     def playTurn(): Unit = exception(this.getClass.getSimpleName)
 
-    def rollDice(): Unit = exception(this.getClass.getSimpleName)
-
-    def choosePath(): Unit = exception(this.getClass.getSimpleName)
-
     def stop(): Unit = exception(this.getClass.getSimpleName)
-
-    def noMovementsLeft(): Unit = exception(this.getClass.getSimpleName)
-
-    def pass(): Unit = exception(this.getClass.getSimpleName)
-
-    def choosePlayer(): Unit = exception(this.getClass.getSimpleName)
 
     def finishCombat(): Unit = exception(this.getClass.getSimpleName)
 
-    def encounterPanelEffect(): Unit = exception(this.getClass.getSimpleName)
+    def encounterPanel(): Unit = exception(this.getClass.getSimpleName)
 
     def nextTurn(): Unit = exception(this.getClass.getSimpleName)
 
     def playAgain(): Unit = exception(this.getClass.getSimpleName)
 
-
     def isStarting: Boolean = false
 
     def hasFinished: Boolean = false
-
 }

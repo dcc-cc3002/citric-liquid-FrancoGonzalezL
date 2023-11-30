@@ -11,8 +11,11 @@ import controller.states.Chapter
  */
 class CombatPvsWU(controller: GameController) extends GameState(controller){
 
+    override def play(): Unit = {
+
+    }
+
     override def finishCombat(): Unit = {
-        /* do something */
         this.changeState(new Chapter(controller))
     }
 }

@@ -2,8 +2,8 @@ package cl.uchile.dcc.citric
 package controller.states
 
 import controller.GameController
-import controller.states.startAndEnd.EndGame
 import controller.states.playerTurn.{PlayerTurn, Recovery}
+import model.unit.player.IPlayer
 
 /** Controls the Chapters of the Game.
  *
@@ -13,27 +13,20 @@ import controller.states.playerTurn.{PlayerTurn, Recovery}
  *  - A player can begin its turn or recover.
  */
 class Chapter(controller: GameController) extends GameState(controller) {
+
     override def play(): Unit = {
+        val player: IPlayer = controller.currentCharacter
 
+        if(controller.turn == 0)
+            controller.advanceChapter()
+
+        else if(player.isKO)
+            recoverPlayer()
+
+        else playTurn()
     }
 
-    override def finishGame(): Unit = {
-        /* do something */
-        this.changeState(new EndGame(controller))
-    }
+    override def playTurn(): Unit = this.changeState(new PlayerTurn(controller))
 
-    override def playTurn(): Unit = {
-        /* do something */
-        this.changeState(new PlayerTurn(controller))
-    }
-
-    override def recoverPlayer(): Unit = {
-        /* do something */
-        this.changeState(new Recovery(controller))
-    }
-
-    override def nextChapter(): Unit = {
-        /* do something */
-        this.changeState(new Chapter(controller))
-    }
+    override def recoverPlayer(): Unit = this.changeState(new Recovery(controller))
 }
