@@ -2,8 +2,9 @@ package cl.uchile.dcc.citric
 package model.norma
 
 import model.unit.player.IPlayer
-import model.panel.{Panel, HomePanel}
+import model.panel.Panel
 import model.norma.goals.{IGoal, StarsGoal, VictoriesGoal}
+import cl.uchile.dcc.citric.model.panel.home.HomePanel
 
 /** An abstract class representing a Norma.
  *

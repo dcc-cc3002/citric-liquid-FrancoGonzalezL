@@ -1,6 +1,7 @@
 package cl.uchile.dcc.citric
-package model.norma
+package model.norma.levels
 
+import model.norma.{ANorma, INorma}
 import model.unit.player.IPlayer
 
 
