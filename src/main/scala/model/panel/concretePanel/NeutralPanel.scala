@@ -1,6 +1,7 @@
 package cl.uchile.dcc.citric
-package model.panel
+package model.panel.concretePanel
 
+import model.panel.APanel
 import model.unit.player.IPlayer
 
 /**A class representing a NeutralPanel.
@@ -8,6 +9,7 @@ import model.unit.player.IPlayer
  * Does nothing.
  */
 class NeutralPanel extends APanel {
+
     /** Literally, does nothing. */
-    override def apply(player: IPlayer): Boolean = true
+    override def apply(player: IPlayer): Unit = return
 }

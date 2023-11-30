@@ -3,6 +3,8 @@ package model.panel
 
 import model.unit.player.IPlayer
 
+import scala.collection.mutable.ArrayBuffer
+
 /** Represents a single cell on a board, known as a Panel.
  *
  * Each panel has its own effect, which can be applied to a character.
@@ -16,11 +18,9 @@ import model.unit.player.IPlayer
  */
 trait Panel {
 
-    /** Returns the type of the Panel.
-     *
-     * The type of the Panel is the name of the class.
-     */
-    def panelType: String
+    def nextPanels: ArrayBuffer[Panel]
+
+    def characters: ArrayBuffer[IPlayer]
 
     /** Returns True if a player is on the Panel. */
     def containsCharacter(character: IPlayer): Boolean
@@ -69,6 +69,14 @@ trait Panel {
      */
     def removeNextPanel(otherPanel: Panel): Boolean
 
+    def getNextPanelByIndex(index: Int): Panel
+
+    def getCharacterByIndex(index: Int): IPlayer
+
+    def nextPanelsToString(init: Int): String
+
+    def charactersToString(init: Int): String
+
     /** The effect of the Panel in a player.
      *
      * This might be invoked when a player moves to this panel.
@@ -77,6 +85,8 @@ trait Panel {
      *
      * @param player The player that has moved to this Panel.
      */
-    def apply(player: IPlayer): Boolean
+    def apply(player: IPlayer): Unit
+
+    def canStopHere(player: IPlayer): Boolean
 }
 

@@ -1,6 +1,7 @@
 package cl.uchile.dcc.citric
-package model.panel
+package model.panel.concretePanel
 
+import model.panel.APanel
 import model.unit.player.IPlayer
 
 /**A class representing a Drop Panel
@@ -17,9 +18,9 @@ class DropPanel extends APanel {
      *
      * @param player The player that has moved to this Panel.
      */
-    override def apply(player: IPlayer): Boolean = {
+    override def apply(player: IPlayer): Unit = {
+        if(!this.containsCharacter(player)) return
         val roll: Int = player.rollDice()
-        player.stars -= roll*player.normaLvl
-        true
+        player.stars -= (roll * player.normaLvl)
     }
 }

@@ -1,5 +1,5 @@
 package cl.uchile.dcc.citric
-package model.panel.concretePanel
+package model.panel.encounter
 
 import model.panel.APanel
 import model.unit.IUnit

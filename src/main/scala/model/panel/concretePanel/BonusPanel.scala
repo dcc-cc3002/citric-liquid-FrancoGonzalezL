@@ -1,6 +1,7 @@
 package cl.uchile.dcc.citric
-package model.panel
+package model.panel.concretePanel
 
+import model.panel.APanel
 import model.unit.player.IPlayer
 
 /**A class representing a Bonus Panel
@@ -17,10 +18,10 @@ class BonusPanel extends APanel {
      *
      * @param player The player that has moved to this Panel.
      */
-    override def apply(player: IPlayer): Boolean = {
+    override def apply(player: IPlayer): Unit = {
+        if(!this.containsCharacter(player)) return
         val roll: Int = player.rollDice()
-        val amount: Int = math.min(roll*player.normaLvl, roll*3)
+        val amount: Int = math.min(roll * player.normaLvl, roll * 3)
         player.stars += amount
-        true
     }
 }

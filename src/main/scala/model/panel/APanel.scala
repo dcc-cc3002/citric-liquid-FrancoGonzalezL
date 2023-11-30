@@ -3,8 +3,6 @@ package model.panel
 
 import model.unit.player.IPlayer
 
-import cl.uchile.dcc.citric.model.unit.IUnit
-
 import scala.collection.mutable.ArrayBuffer
 
 /** Abstract class representing a Panel. */
@@ -15,7 +13,7 @@ abstract class APanel extends Panel {
      * In the game, multiple characters might be on the same panel at once, e.g., if multiple players
      * land on the same space.
      */
-    private val characters: ArrayBuffer[IPlayer] = new ArrayBuffer[IPlayer]()
+    private val _characters: ArrayBuffer[IPlayer] = ArrayBuffer()
 
     /** An array of panels that are directly connected to this one.
      *
@@ -24,32 +22,27 @@ abstract class APanel extends Panel {
      *
      * @return a List of Panel instances that are adjacent or connected to this panel.
      */
-    private val nextPanels: ArrayBuffer[Panel] = new ArrayBuffer[Panel]()
+    private val _nextPanels: ArrayBuffer[Panel] = ArrayBuffer()
 
+    override def nextPanels: ArrayBuffer[Panel] = _nextPanels.clone()
+
+    override def characters: ArrayBuffer[IPlayer] = _characters.clone()
 
     override def containsCharacter(character: IPlayer): Boolean = {
-        if (characters.indexOf(character) == -1)
-            false
-        else
-            true
+        _characters.contains(character)
     }
 
-    override def charactersCount: Int = characters.size
+    override def charactersCount: Int = _characters.size
 
     override def containsNextPanel(otherPanel: Panel): Boolean = {
-        if(nextPanels.indexOf(otherPanel) == -1)
-            false
-        else
-            true
+        _nextPanels.contains(otherPanel)
     }
 
-    override def nextPanelsCount: Int = nextPanels.size
-
-    override def panelType: String = this.getClass.getSimpleName
+    override def nextPanelsCount: Int = _nextPanels.size
 
     override def addCharacter(player: IPlayer): Boolean = {
         if(!containsCharacter(player)){
-            characters.addOne(player)
+            _characters.addOne(player)
             true
         }else false
     }
@@ -57,8 +50,8 @@ abstract class APanel extends Panel {
     override def removeCharacter(player: IPlayer): Boolean = {
         if (!containsCharacter(player)) false
         else{
-            val index = characters.indexOf(player)
-            characters.remove(index)
+            val index: Int = _characters.indexOf(player)
+            _characters.remove(index)
             true
         }
     }
@@ -68,7 +61,7 @@ abstract class APanel extends Panel {
         if (this == otherPanel || this.containsNextPanel(otherPanel))
             false
         else{
-            nextPanels.addOne(otherPanel)
+            _nextPanels.addOne(otherPanel)
             true
         }
     }
@@ -76,9 +69,45 @@ abstract class APanel extends Panel {
     override def removeNextPanel(otherPanel: Panel): Boolean = {
         if (!this.containsNextPanel(otherPanel)) false
         else{
-            val index = nextPanels.indexOf(otherPanel)
-            nextPanels.remove(index)
+            val index: Int = _nextPanels.indexOf(otherPanel)
+            _nextPanels.remove(index)
             true
         }
     }
+
+    override def getNextPanelByIndex(index: Int): Panel = {
+        val panel: Option[Panel] =
+            _nextPanels.find(panel => {
+                _nextPanels.indexOf(panel) == index
+            })
+        if(panel.isDefined) panel.get
+        else throw new AssertionError("Panel not found")
+    }
+
+    override def getCharacterByIndex(index: Int): IPlayer = {
+        val player: Option[IPlayer] =
+            _characters.find(player => {
+                _characters.indexOf(player) == index
+            })
+        if (player.isDefined) player.get
+        else throw new AssertionError("Player not found in Panel")
+    }
+
+    override def nextPanelsToString(init: Int): String = {
+        var s: String = ""
+        _nextPanels.foreach(panel => {
+            s += s"${_nextPanels.indexOf(panel)+init} -> Panel type: ${panel.getClass.getSimpleName}, N of Players: ${panel.charactersCount}\n"
+        })
+        s
+    }
+
+    override def charactersToString(init: Int): String = {
+        var s: String = ""
+        _characters.foreach(player => {
+            s += s"${_characters.indexOf(player)+init} -> Name: ${player.name}, Hp: ${player.hp}, attack: ${player.attack}\n"
+        })
+        s
+    }
+
+    override def canStopHere(player: IPlayer): Boolean = false
 }
