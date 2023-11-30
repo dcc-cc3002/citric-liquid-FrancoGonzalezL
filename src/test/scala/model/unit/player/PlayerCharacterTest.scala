@@ -2,7 +2,7 @@ package cl.uchile.dcc.citric
 package model.unit.player
 
 import model.unit.IUnit
-import model.unit.wildunit.{Chicken, RoboBall, Seagull}
+import cl.uchile.dcc.citric.model.unit.wildUnit.concreteWildUnit.{Chicken, RoboBall, Seagull}
 
 import scala.util.Random
 
@@ -67,15 +67,15 @@ class PlayerCharacterTest extends munit.FunSuite {
         val prevVictories: Int = character.victories
         unit.hp = 0     // hp == 0 => has been defeated
         assertEquals(unit.hp, 0)
-        assert(unit.defeated(character))
+        unit.defeated(character)
         assertEquals(character.victories, prevVictories + 1)
     }
 
     test("If the player defeats another player, the player should receive 2 victories"){
-        val otherPlayer: IUnit = new PlayerCharacter(name="John Doe", maxHp, attack, defense, evasion)
+        val otherPlayer: IUnit = new PlayerCharacter(_name="John Doe", maxHp, attack, defense, evasion)
         val prevVictories: Int = character.victories
         otherPlayer.hp = 0    // hp == 0 => has been defeated
-        assert(otherPlayer.defeated(character))
+        otherPlayer.defeated(character)
         assertEquals(character.victories, prevVictories + 2)
     }
 
@@ -83,7 +83,9 @@ class PlayerCharacterTest extends munit.FunSuite {
         val unit: IUnit = new Chicken(name="Huevito Rey")
         val attack: Int = unit.attack + unit.rollDice()
         val prevHp: Int = character.hp
-        character.receiveAttack(attack)
+        val defenseMethod: Int = 2
+
+        character.receiveAttack(attack, defenseMethod)
         assert(character.hp <= prevHp)
     }
 

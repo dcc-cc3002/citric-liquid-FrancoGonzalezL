@@ -1,12 +1,12 @@
 package cl.uchile.dcc.citric
-package model.panel
+package model.panel.concretePanel
 
+import model.panel.APanel
 import model.unit.IUnit
-import model.unit.wildunit.{Chicken, Seagull, RoboBall}
+import model.unit.player.IPlayer
+import model.unit.wildUnit.concreteWildUnit.{Chicken, RoboBall, Seagull}
 
 import scala.util.Random
-
-import model.unit.player.IPlayer
 
 /**A class representing an Encounter Panel.
  *
@@ -41,9 +41,8 @@ class EncounterPanel extends APanel {
      *
      * @param player The player that has moved to this Panel.
      */
-    override def apply(player: IPlayer): Boolean = {
+    override def apply(player: IPlayer): Unit = {
         if(!unitIsAlive())
             setUnit()
-        true
     }
 }

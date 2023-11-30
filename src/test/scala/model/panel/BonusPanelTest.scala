@@ -3,6 +3,8 @@ package model.panel
 
 import model.unit.player.{IPlayer, PlayerCharacter}
 
+import cl.uchile.dcc.citric.model.panel.concretePanel.{BonusPanel, NeutralPanel}
+
 class BonusPanelTest extends munit.FunSuite {
     var bonusPanel: Panel = _
 

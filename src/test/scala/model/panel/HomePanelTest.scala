@@ -3,6 +3,8 @@ package model.panel
 
 import model.unit.player.{IPlayer, PlayerCharacter}
 
+import cl.uchile.dcc.citric.model.panel.home.HomePanel
+
 class HomePanelTest extends munit.FunSuite {
     var homePanel: HomePanel = _
 

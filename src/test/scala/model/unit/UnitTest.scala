@@ -1,23 +1,25 @@
 package cl.uchile.dcc.citric
 package model.unit
 
-import model.unit.wildunit.{Chicken, RoboBall}
+import model.unit.player.PlayerCharacter
+import model.unit.wildUnit.concreteWildUnit.Chicken
 
-import model.unit.player.{PlayerCharacter, IPlayer}
+import cl.uchile.dcc.citric.exceptions.InvalidInputException
+
 import util.Random
 
 class UnitTest extends munit.FunSuite {
-    var unit: IUnit = _
-    var player: IPlayer = _
+    var chicken: IUnit = _
+    var chickenKiller: IUnit = _
 
-    val maxHp: Int = 10
-    val attack: Int = 10
+    val maxHp:   Int = 10
+    val attack:  Int = 10
     val defense: Int = 10
     val evasion: Int = 10
 
     override def beforeEach(context: BeforeEach): Unit = {
-        unit = new Chicken(name = "John Doe", new Random(11))
-        player = new PlayerCharacter("John Doe copy", maxHp, attack, defense, evasion, new Random(7))
+        chicken = new Chicken("Evil Chicken", new Random(11))
+        chickenKiller = new PlayerCharacter("Chicken Killer", maxHp, attack, defense, evasion, new Random(7))
     }
 
     // Two ways to test randomness (you can use any of them):
@@ -25,7 +27,7 @@ class UnitTest extends munit.FunSuite {
     // 1. Test invariant properties, e.g. the result is always between 1 and 6.
     test("A character should be able to roll a dice") {
         for (_ <- 1 to 10) {
-            assert(unit.rollDice >= 1 && unit.rollDice <= 6)
+            assert(chicken.rollDice >= 1 && chicken.rollDice <= 6)
         }
     }
 
@@ -34,75 +36,90 @@ class UnitTest extends munit.FunSuite {
     // are always the same for the same seed.
     test("A character should be able to roll a dice with a fixed seed") {
         val other =
-            new PlayerCharacter(name="Pedro", maxHp, attack, defense, evasion, new Random(11))
+            new PlayerCharacter("Pedro", maxHp, attack, defense, evasion, new Random(11))
         for (_ <- 1 to 10) {
-            assertEquals(unit.rollDice(), other.rollDice())
+            assertEquals(chicken.rollDice(), other.rollDice())
         }
     }
 
     test("A Unit should not have less than 0 Stars"){
+        val expected: Int = 0
+        val newStars: Int = -10
+
         //wildUnit
-        assertEquals(unit.stars, 0)
-        unit.stars = -10
-        assertEquals(unit.stars, 0)
+        assertEquals(chicken.stars, expected)
+        chicken.stars = newStars
+        assertEquals(chicken.stars, expected)
+
         //Player
-        assertEquals(player.stars, 0)
-        player.stars -= 10
-        assertEquals(player.stars, 0)
+        assertEquals(chickenKiller.stars, expected)
+        chickenKiller.stars = newStars
+        assertEquals(chickenKiller.stars, expected)
     }
 
     test("A Unit should not have less than 0 hp"){
-        assert(unit.hp > 0)
-        unit.hp = -100
-        assertEquals(unit.hp, 0)
+        val expected: Int = 0
+        val newHp: Int = -10
 
-        assert(player.hp > 0)
-        player.hp -= maxHp
-        assertEquals(player.hp, 0)
+        assert(chicken.hp > expected)
+        assert(chickenKiller.hp > 0)
+
+        chicken.hp = newHp
+        assertEquals(chicken.hp, expected)
+
+        chickenKiller.hp = newHp
+        assertEquals(chickenKiller.hp, expected)
     }
 
     test("The hp should not be greater than maxHp") {
-        assert(unit.hp <= unit.maxHp)
-        unit.hp = unit.maxHp + 1
-        assertEquals(unit.hp, unit.maxHp)
+        assert(chicken.hp <= chicken.maxHp)
+        assert(chickenKiller.hp <= chickenKiller.maxHp)
 
-        assertEquals(player.hp, player.maxHp)
-        player.hp += 1
-        assertEquals(player.hp, player.maxHp)
-    }
+        chicken.hp = chicken.maxHp + 1
+        assertEquals(chicken.hp, chicken.maxHp)
 
-    test("An unit should be able to attack, and the damage should not be less than 0"){
-        val prevHp: Int = unit.hp
-        player.attack(unit)
-        assert(unit.hp <= prevHp)
-    }
-
-    test("If a unit has been defeated, the attack method should return True"){
-        /*  max{1, roll + attack - (roll + def) }
-            should not be greater than ((6+attack) - (roll+1))
-            so the unit can not defeat the player in 1 turn (). */
-        assert(!unit.attack(player))
-        // if the unit is defeated (hp == 0), returns True.
-        unit.hp = 1
-        assert(player.attack(unit) || unit.hp > 0)
+        chickenKiller.hp = chickenKiller.maxHp + 1
+        assertEquals(chickenKiller.hp, chickenKiller.maxHp)
     }
 
     test("If a unit has been defeated, the unit should not be attacked again."){
-        unit.hp = 0
-        assert(!player.attack(unit))
+        val prevHp: Int = chicken.hp
+        var attack: Int = chickenKiller.attack(chicken)
+        val defenseMethod: Int = 1
+        val expected: Int = 0
+
+        chicken.receiveAttack(attack, defenseMethod)
+        assertNotEquals(chicken.hp, prevHp)
+
+        attack = chickenKiller.attack(chicken)
+        chicken.receiveAttack(attack, defenseMethod)
+        assertEquals(chicken.hp, expected)
     }
 
-    test("An unit should be able to evade, and the damage received should be greater or equal than 0"){
-        val attack: Int = unit.attack + unit.rollDice()
-        val prevHp: Int = player.hp
-        player.evade(attack)
-        assert(player.hp == prevHp || player.hp == math.max(0, prevHp - attack))
+    test("An unit should be able to attack, and the damage should not be less than 0") {
+        val prevH: Int = chickenKiller.hp
+        val attack: Int = chicken.attack(chickenKiller)
+        val defenseMethod: Int = 1
+
+        chicken.receiveAttack(attack, defenseMethod)
+        assert(chicken.hp <= prevH)
     }
 
     test("An unit should be able to defend, and the damage received should be greater than 0"){
-        val attack: Int = unit.attack + unit.rollDice()
-        val prevHp: Int = player.hp
-        player.defend(attack)
-        assert(player.hp < prevHp)
+        val prevHp: Int = chickenKiller.hp
+        val attack: Int = chickenKiller.attack(chicken)
+        val defendMethod: Int = 1
+
+        chicken.receiveAttack(attack, defendMethod)
+        assert(chickenKiller.hp < prevHp)
+    }
+
+    test("An unit should be able to evade, and the damage received should be greater or equal than 0"){
+        val prevHp: Int = chickenKiller.hp
+        val attack: Int = chickenKiller.attack(chicken)
+        val defendMethod: Int = 2
+
+        chicken.receiveAttack(attack, defendMethod)
+        assert(chickenKiller.hp == prevHp || chickenKiller.hp == math.max(0, prevHp - attack))
     }
 }

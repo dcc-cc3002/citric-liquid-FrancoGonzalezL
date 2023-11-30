@@ -1,6 +1,7 @@
 package cl.uchile.dcc.citric
-package model.panel
+package model.panel.concretePanel
 
+import model.panel.APanel
 import model.unit.player.IPlayer
 
 /**A class representing a Home Panel.
@@ -27,8 +28,10 @@ class HomePanel(val owner: IPlayer) extends APanel {
      *
      * @param player The player that has moved to this Panel.
      */
-    override def apply(player: IPlayer): Boolean = {
+    override def apply(player: IPlayer): Unit = {
         player.hp += 1
-        player.normaCheck(panel=this)
+
+        if (this.containsCharacter(player))
+            player.normaCheck(panel=this)
     }
 }

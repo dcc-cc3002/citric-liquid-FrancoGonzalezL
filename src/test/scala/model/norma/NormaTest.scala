@@ -2,7 +2,9 @@ package cl.uchile.dcc.citric
 package model.norma
 
 import model.unit.player.{IPlayer, PlayerCharacter}
-import model.panel.{Panel, HomePanel, NeutralPanel}
+import model.panel.Panel
+import cl.uchile.dcc.citric.model.panel.concretePanel.NeutralPanel
+import cl.uchile.dcc.citric.model.panel.home.HomePanel
 
 class NormaTest extends munit.FunSuite {
     val StarsGoal: String = "Stars"
@@ -47,10 +49,16 @@ class NormaTest extends munit.FunSuite {
     }
 
     test("The players should have a goal to level up their Norma"){
-        assert(!homePanel.apply(player))
+        homePanel.addCharacter(player)
+
+        homePanel.apply(player)
+        assertEquals(player.normaLvl, 1)
         player.goal = StarsGoal
         player.stars += 10
-        assert(homePanel.apply(player))
+
+        homePanel.apply(player)
+        assertEquals(player.normaLvl, 2)
+
     }
 
     test("The level of the Norma should not be greater than 6"){
@@ -62,13 +70,15 @@ class NormaTest extends munit.FunSuite {
         }
         assertEquals(player.normaLvl, 6)
         player.goal = StarsGoal
-        assert(homePanel.apply(player))
+        homePanel.apply(player)
         assertEquals(player.normaLvl, expected=6)
     }
 
     test("The player should only level up if the player has achieved the requirements of the current goal"){
+        val prevNormaLvl: Int = player.normaLvl
         player.goal = StarsGoal
         player.stars += 9
-        assert(!homePanel.apply(player))
+        homePanel.apply(player)
+        assertEquals(player.normaLvl, prevNormaLvl)
     }
 }

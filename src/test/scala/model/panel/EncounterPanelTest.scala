@@ -4,6 +4,8 @@ package model.panel
 import model.unit.IUnit
 import model.unit.player.{IPlayer, PlayerCharacter}
 
+import cl.uchile.dcc.citric.model.panel.encounter.EncounterPanel
+
 class EncounterPanelTest extends munit.FunSuite {
     var encounterPanel: EncounterPanel = _
 

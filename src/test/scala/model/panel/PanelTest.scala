@@ -2,6 +2,10 @@ package cl.uchile.dcc.citric
 package model.panel
 
 import model.unit.player.{IPlayer, PlayerCharacter}
+
+import cl.uchile.dcc.citric.model.panel.concretePanel.{BonusPanel, DropPanel, NeutralPanel}
+import cl.uchile.dcc.citric.model.panel.home.HomePanel
+
 import scala.util.Random
 
 class PanelTest extends munit.FunSuite {
@@ -24,14 +28,6 @@ class PanelTest extends munit.FunSuite {
         bonusPanel = new BonusPanel
         dropPanel = new DropPanel
         homePanel = new HomePanel(player1)
-    }
-
-    test("Every Panel has a type"){
-        val neutral2: Panel = new NeutralPanel
-        assertEquals(neutralPanel.panelType, neutral2.panelType)
-        assertNotEquals(neutralPanel.panelType, bonusPanel.panelType)
-        assertNotEquals(neutralPanel.panelType, dropPanel.panelType)
-        assertNotEquals(neutralPanel.panelType, homePanel.panelType)
     }
 
     test("A player is correctly added to the Panel"){

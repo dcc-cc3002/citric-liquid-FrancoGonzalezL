@@ -3,6 +3,8 @@ package model.panel
 
 import model.unit.player.{IPlayer, PlayerCharacter}
 
+import cl.uchile.dcc.citric.model.panel.concretePanel.DropPanel
+
 class DropPanelTest extends munit.FunSuite {
     var dropPanel: Panel = _
 

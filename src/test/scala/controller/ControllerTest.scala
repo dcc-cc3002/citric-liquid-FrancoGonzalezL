@@ -31,7 +31,6 @@ class ControllerTest extends munit.FunSuite {
         /* A list that contains all invalid transitions */
         val invalidTransitionsList: List[GameController => Unit] = List(
             (g: GameController) => g.finishGame(),
-            (g: GameController) => g.nextChapter(),
             (g: GameController) => g.recoverPlayer(),
             (g: GameController) => g.requirementsAchieved(),
             (g: GameController) => g.requirementsNotAchieved(),
@@ -63,7 +62,6 @@ class ControllerTest extends munit.FunSuite {
         /* A list that contains all valid transitions */
         val validTransitionsList: List[GameController => Unit] = List(
             (g: GameController) => g.finishGame(),
-            (g: GameController) => g.nextChapter(),
             (g: GameController) => g.recoverPlayer(),
             (g: GameController) => g.playTurn(),
         )

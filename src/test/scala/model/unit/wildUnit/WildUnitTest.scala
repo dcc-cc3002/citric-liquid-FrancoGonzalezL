@@ -1,8 +1,11 @@
 package cl.uchile.dcc.citric
-package model.unit.wildunit
+package model.unit.wildUnit
 
 import model.unit.player.{IPlayer, PlayerCharacter}
 import model.unit.IUnit
+
+import model.unit.wildUnit.concreteWildUnit.{Chicken, RoboBall, Seagull}
+
 import util.Random
 
 class WildUnitTest extends munit.FunSuite{
@@ -37,14 +40,14 @@ class WildUnitTest extends munit.FunSuite{
         assertEquals(chicken.evasion, 1)
     }
     test("A RoboBall should have correctly set its attributes") {
-        val roboBall: AWildUnit = new RoboBall()
+        val roboBall: IWildUnit = new RoboBall()
         assertEquals(roboBall.maxHp, 3)
         assertEquals(roboBall.attack, -1)
         assertEquals(roboBall.defense, 1)
         assertEquals(roboBall.evasion, -1)
     }
     test("A Seagull should have correctly set its attributes") {
-        val seagull: AWildUnit = new Seagull()
+        val seagull: IWildUnit = new Seagull()
         assertEquals(seagull.maxHp, 3)
         assertEquals(seagull.attack, 1)
         assertEquals(seagull.defense, -1)
@@ -55,10 +58,16 @@ class WildUnitTest extends munit.FunSuite{
         player.stars = 11
         val prevStarsUnit: Int = chicken.stars
         val prevStarsPlayer: Int = player.stars
+
         player.hp = 0
+        assert(player.isKO)
         player.defeated(chicken)
-        assertEquals(chicken.stars, prevStarsUnit + prevStarsPlayer / 2)
-        assertEquals(player.stars, prevStarsPlayer - prevStarsPlayer / 2)
+
+        val expectedStarsChicken: Int = prevStarsUnit + (prevStarsPlayer / 2)
+        val expectedStarsPlayer: Int = prevStarsPlayer - (prevStarsPlayer / 2)
+
+        assertEquals(chicken.stars, expectedStarsChicken)
+        assertEquals(player.stars, expectedStarsPlayer)
     }
 
     test("If a Wild Unit defeats another Wild Unit, The winner should get all the stars from the defeated and the bonus"){
@@ -74,6 +83,6 @@ class WildUnitTest extends munit.FunSuite{
 
         chicken.defeated(seagull)
         assertEquals(chicken.stars, 0)
-        assertEquals(seagull.stars, prevStarsChicken+prevStarsSeagull+bonusChicken)
+        assertEquals(seagull.stars, prevStarsChicken + prevStarsSeagull + bonusChicken)
     }
 }
