@@ -3,7 +3,7 @@ package model.unit
 package player
 
 import model.norma.HasGoal
-import model.panel.Panel
+import model.panel.home.Home
 
 /** Represents a Player.
  *
@@ -35,13 +35,16 @@ trait IPlayer extends IUnit with HasGoal {
     /** Returns true if the player has been knockout */
     def isKO: Boolean
 
-    /**This might be invoked when it's the player's turn but the player has been knockout.
+    /** This might be invoked when it's the player's turn but the player has been knockout.
      *
      * @param required The required amount to recover, it starts
      *                 at 6 and decreases by 1 as the Chapters progress.
      */
     def recovery(required: Int): Unit
 
-
-    def normaCheck(panel: Panel): Boolean
+    /** Performs a NormaCheck.
+     *
+     * @param panel The Panel where the player is located.
+     */
+    def normaCheck(panel: Home): Unit
 }

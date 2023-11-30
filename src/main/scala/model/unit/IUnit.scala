@@ -2,7 +2,7 @@ package cl.uchile.dcc.citric
 package model.unit
 
 import player.IPlayer
-import wildunit.IWildUnit
+import wildUnit.IWildUnit
 
 /** Represents the entities tha will participate int the game,
  * either as a character, controllable by the user, or as a
@@ -13,19 +13,19 @@ import wildunit.IWildUnit
 trait IUnit {
 
     /** The name of the unit */
-    val name: String
+    def name: String
 
     /** The max hit points of the unit */
-    val maxHp: Int
+    def maxHp: Int
 
     /** The attack points of the unit */
-    val attack: Int
+    def attack: Int
 
     /** The defence points of the unit */
-    val defense: Int
+    def defense: Int
 
     /** The evasion points of the unit */
-    val evasion: Int
+    def evasion: Int
 
     /** Return the current amount of hit points */
     def hp: Int
@@ -52,7 +52,7 @@ trait IUnit {
      *
      * @return True if the attack defeats the other unit.
      */
-    def attack(unit: IUnit): Boolean
+    def attack(unit: IUnit): Int
 
     /** This might be invoked when a unit is being attacked.
      *
@@ -61,9 +61,12 @@ trait IUnit {
      *
      *  If a unit is being attack, the unit should choose to evade or defend.
      *
+     *  @param attack The attack points of the attacker.
+     *  @param defenseMethod 1 if the player wants to defend.
+     *                2 if the player wants to evade.
      *  @return True if the unit under attack has been defeated.
      */
-    def receiveAttack(attack: Int): Boolean
+    def receiveAttack(attack: Int, defenseMethod: Int): Unit
 
     /** This might be invoked when a player wants to defend an attack.
      *
@@ -74,7 +77,7 @@ trait IUnit {
      *
      * @return True if the unit was defeated by the attack.
      */
-    def defend(attack: Int): Boolean
+    protected[unit] def defend(attack: Int): Unit
 
     /** This might be invoked when a player wants to evade an attack.
      *
@@ -82,10 +85,8 @@ trait IUnit {
      * the unit should not receive damage, in oder case the unit will receive all the damage.
      *
      * @param attack The value of (attack + roll) of the enemy.
-     *
-     * @return True if the unit was defeated by the attack.
      */
-    def evade(attack: Int): Boolean
+    protected[unit] def evade(attack: Int): Unit
 
     /** Rolls a dice and returns a value between 1 to 6. */
     def rollDice(): Int
@@ -93,13 +94,8 @@ trait IUnit {
     /** This might be invoked when a unit has won a fight.
      *
      *  To call this method, the unit should have been defeated (0 hp).
-     *
-
-     *
-     *  @return True if the unit has been defeated. False if the method
-     *          has been called and the unit has hp > 0.
      */
-    def defeated(attacker: IUnit): Boolean
+    def defeated(attacker: IUnit): Unit
 
     /** This might be invoked when a unit has won against a player.
      *
@@ -107,10 +103,8 @@ trait IUnit {
      *  - Gives half of the player's stars to the winner.    *
      *
      * @param defeated The player that has been defeated.
-     *
-     * @return True if the reward has been delivered successfully.
      */
-    def getRewardFromPlayer(defeated: IPlayer): Boolean
+    protected[unit] def rewardFromPlayer(defeated: IPlayer): Unit
 
     /** This might be invoked when a unit has won against a WildUnit.
      *
@@ -118,8 +112,6 @@ trait IUnit {
      *  - Gives all of the unit's stars to the winner, plus the bonus of the wildUnit.
      *
      * @param defeated The WildUnit that has been defeated.
-     *
-     * @return True if the reward has been delivered successfully.
      */
-    def getRewardFromWildUnit(defeated: IWildUnit): Boolean
+    protected[unit] def rewardFromWildUnit(defeated: IWildUnit): Unit
 }

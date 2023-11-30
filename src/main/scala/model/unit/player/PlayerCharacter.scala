@@ -1,10 +1,13 @@
 package cl.uchile.dcc.citric
 package model.unit.player
 
-import model.unit.wildunit.IWildUnit
+import model.unit.wildUnit.IWildUnit
 import model.unit.{AUnit, IUnit}
-import model.norma.{ANorma, INorma, NormaLvl1}
+import model.norma.{ANorma, INorma}
 import model.panel.Panel
+import cl.uchile.dcc.citric.model.norma.levels.NormaLvl1
+
+import cl.uchile.dcc.citric.model.panel.home.{Home, HomePanel}
 
 import scala.util.Random
 
@@ -28,12 +31,12 @@ import scala.util.Random
   * an instance of the `Random` class but can be replaced if different random
   * generation behaviors are desired.
   *
-  * @param name The name of the player. This is an identifier and should be unique.
-  * @param maxHp The maximum health points a player can have. It represents the player's endurance.
-  * @param attack The player's capability to deal damage to opponents.
-  * @param defense The player's capability to resist or mitigate damage from opponents.
-  * @param evasion The player's skill to completely avoid certain attacks.
-  * @param randomNumberGenerator A utility to generate random numbers. Defaults to a new `Random`
+  * @param _name The name of the player. This is an identifier and should be unique.
+  * @param _maxHp The maximum health points a player can have. It represents the player's endurance.
+  * @param _attack The player's capability to deal damage to opponents.
+  * @param _defense The player's capability to resist or mitigate damage from opponents.
+  * @param _evasion The player's skill to completely avoid certain attacks.
+  * @param _randomNumberGenerator A utility to generate random numbers. Defaults to a new `Random`
   *                              instance.
   *
   * @author [[https://github.com/danielRamirezL/ Daniel Ramírez L.]]
@@ -42,13 +45,14 @@ import scala.util.Random
   * @author [[https://github.com/Seivier/ Vicente González B.]]
   * @author [[https://github.com/frgonzal/ Franco González L.]]
   */
-class PlayerCharacter(override val name: String,
-                      override val maxHp: Int,
-                      override val attack: Int,
-                      override val defense: Int,
-                      override val evasion: Int,
-                      randomNumberGenerator: Random = new Random())
-    extends AUnit(maxHp, randomNumberGenerator) with IPlayer {
+class PlayerCharacter(
+     _name: String,
+     _maxHp: Int,
+     _attack: Int,
+     _defense: Int,
+     _evasion: Int,
+     _randomNumberGenerator: Random = new Random()
+ ) extends AUnit(_maxHp, _randomNumberGenerator) with IPlayer {
 
     /** Victories counter. */
     private var _victories: Int = 0
@@ -66,22 +70,16 @@ class PlayerCharacter(override val name: String,
         true
     }
 
-    override def defeated(attacker: IUnit): Boolean = {
-        if(hp > 0) return false
-        /* A player always gives half of the stars and 2 victories. */
-        attacker.getRewardFromPlayer(defeated=this)
-        true
+    override def defeated(attacker: IUnit): Unit = {
+        if(hp > 0) return
+        attacker.rewardFromPlayer(this)
     }
 
     override def isKO: Boolean = ko
 
     /** Reduces the amount of current hit points.
      *
-     * @param amount the amount to remove from the hit points.
-     *               If the result is less than 0, then set
-     *               the HP equal to 0.
-     *
-     * When a players HP is 0, the ko var sets to true.
+     *  When a players HP is 0, the ko var sets to true.
      */
     override def hp_=(amount: Int): Unit = {
         super.hp_=(amount)
@@ -90,8 +88,10 @@ class PlayerCharacter(override val name: String,
     }
 
     override def recovery(required: Int): Unit = {
-        if(rollDice() >= required)
+        if(rollDice() >= required) {
+            this.hp = this.maxHp
             ko = false
+        }
     }
 
     override def goal: String = _Norma.goal
@@ -102,40 +102,44 @@ class PlayerCharacter(override val name: String,
         _Norma.goal = option
     }
 
-    override def normaCheck(panel: Panel): Boolean = {
+    override def normaCheck(panel: Home): Unit = {
+        if (!panel.containsCharacter(this)) throw new AssertionError("Player should be on a HomePanel")
+
         val newNorma: Option[INorma] = _Norma.normaCheck(panel)
-        if(newNorma.isDefined){
+        if(newNorma.isDefined)
             _Norma = newNorma.get
-            true
-        }else
-            false
     }
 
-    override def receiveAttack(attack: Int): Boolean = {
-        //provisional method
-        //should give the player the option to defend or evade
-        if(attack > this.defense + 3)
-            evade(attack)
-        else
-            defend(attack)
+    override def rewardFromWildUnit(defeated: IWildUnit): Unit = {
+        if (defeated.hp > 0) return
+        val victoriesReward: Int = 1
+        val starsReward:     Int = defeated.stars + defeated.bonusStars
+
+        this.victories += victoriesReward
+        this.stars     += starsReward
+        defeated.stars  = 0
     }
 
-    override def getRewardFromWildUnit(defeated: IWildUnit): Boolean = {
-        if (defeated.hp > 0) return false
+    override def rewardFromPlayer(defeated: IPlayer): Unit = {
+        if (defeated.hp > 0) return
+        val victoriesReward: Int = 2
+        val starsReward:     Int = defeated.stars / 2
 
-        this.victories += 1
-        this.stars += defeated.stars + defeated.bonusStars
-        defeated.stars = 0
-        true
+        this.victories += victoriesReward
+        this.stars     += starsReward
+        defeated.stars -= starsReward
     }
 
-    override def getRewardFromPlayer(defeated: IPlayer): Boolean = {
-        if (defeated.hp > 0) return false
+    override def name: String = _name
 
-        this.victories += 2
-        this.stars += defeated.stars / 2
-        defeated.stars -= defeated.stars / 2
-        true
-    }
+    override def maxHp: Int = _maxHp
 
+    override def attack: Int = _attack
+
+    override def defense: Int = _defense
+
+    override def evasion: Int = _evasion
+
+    /* Set the hp equal to the maxHp */
+    this.hp = maxHp
 }

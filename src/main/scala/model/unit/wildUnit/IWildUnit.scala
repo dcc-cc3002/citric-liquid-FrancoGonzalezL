@@ -1,5 +1,5 @@
 package cl.uchile.dcc.citric
-package model.unit.wildunit
+package model.unit.wildUnit
 
 import model.unit.IUnit
 
