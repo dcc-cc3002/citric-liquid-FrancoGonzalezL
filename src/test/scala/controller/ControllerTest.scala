@@ -2,6 +2,7 @@ package cl.uchile.dcc.citric
 package controller
 
 import exceptions.InvalidTransitionException
+import controller.states.Chapter
 
 class ControllerTest extends munit.FunSuite {
     var game: GameController = _
@@ -32,17 +33,9 @@ class ControllerTest extends munit.FunSuite {
         val invalidTransitionsList: List[GameController => Unit] = List(
             (g: GameController) => g.finishGame(),
             (g: GameController) => g.recoverPlayer(),
-            (g: GameController) => g.requirementsAchieved(),
-            (g: GameController) => g.requirementsNotAchieved(),
             (g: GameController) => g.playTurn(),
-            (g: GameController) => g.rollDice(),
-            (g: GameController) => g.choosePath(),
             (g: GameController) => g.stop(),
-            (g: GameController) => g.noMovementsLeft(),
-            (g: GameController) => g.pass(),
-            (g: GameController) => g.choosePlayer(),
             (g: GameController) => g.finishCombat(),
-            (g: GameController) => g.encounterPanelEffect(),
             (g: GameController) => g.nextTurn(),
             (g: GameController) => g.playAgain()
         )
@@ -67,8 +60,7 @@ class ControllerTest extends munit.FunSuite {
         )
         validTransitionsList.foreach(f => {
             try {
-                game = new GameController
-                game.startGame()
+                game.setState(new Chapter(game))
                 f(game)
             } catch {
                 case e: InvalidTransitionException =>
@@ -84,16 +76,8 @@ class ControllerTest extends munit.FunSuite {
         /* A list that contains all invalid transitions */
         val invalidTransitionsList: List[GameController => Unit] = List(
             (g: GameController) => g.startGame(),
-            (g: GameController) => g.requirementsAchieved(),
-            (g: GameController) => g.requirementsNotAchieved(),
-            (g: GameController) => g.rollDice(),
-            (g: GameController) => g.choosePath(),
             (g: GameController) => g.stop(),
-            (g: GameController) => g.noMovementsLeft(),
-            (g: GameController) => g.pass(),
-            (g: GameController) => g.choosePlayer(),
             (g: GameController) => g.finishCombat(),
-            (g: GameController) => g.encounterPanelEffect(),
             (g: GameController) => g.nextTurn(),
             (g: GameController) => g.playAgain()
         )
