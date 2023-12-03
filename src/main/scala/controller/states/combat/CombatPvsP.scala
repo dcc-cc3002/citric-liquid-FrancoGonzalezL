@@ -3,7 +3,6 @@ package controller.states.combat
 
 import controller.GameController
 import controller.states.{GameState, LandingPanel}
-import controller.states.panel.PanelEffect
 
 import cl.uchile.dcc.citric.model.panel.Panel
 import cl.uchile.dcc.citric.model.unit.IUnit

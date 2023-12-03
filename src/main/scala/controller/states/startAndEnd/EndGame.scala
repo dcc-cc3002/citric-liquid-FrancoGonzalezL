@@ -9,9 +9,11 @@ import model.unit.player.IPlayer
  *  Should clear all the variables
  *  to be able to initialize another Game.
  */
-class EndGame(controller: GameController, winner: IPlayer) extends GameState(controller) {
+class EndGame(controller: GameController) extends GameState(controller) {
 
     override def play(): Unit = {
+        if(controller.winner.isEmpty) throw new AssertionError("Winner undefined: The game can not end.")
+        val winner: IPlayer = controller.winner.get
         val msg: String =
             s"""The Game has finish. Congratulations!!
                |
@@ -23,10 +25,7 @@ class EndGame(controller: GameController, winner: IPlayer) extends GameState(con
         controller.sendMsg(msg)
     }
 
-    override def playAgain(): Unit = {
-        /* do something */
-        this.changeState(new PreGame(controller))
-    }
+    override def playAgain(): Unit = this.changeState(new PreGame(controller))
 
     override def hasFinished: Boolean = true
 }

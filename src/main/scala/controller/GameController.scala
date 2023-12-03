@@ -41,7 +41,10 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
     private var _chapter: Int = 0
     private var _turn: Int = 0
     private var _panels: Map[IPlayer, Panel] = Map()
-    private var debug: Boolean = false
+    private var _debug: Boolean = false
+    private var _winner: Option[IPlayer] = None
+
+    protected[controller] def winner: Option[IPlayer] = _winner
 
     /** This function should be called every time the Game State changes.
      *
@@ -116,19 +119,18 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
     override def update(subject: ISubject[IPlayer], msg: IPlayer): Unit = {
         val winner: IPlayer = msg
         if (winner.normaLvl < 6) throw new AssertionError("The player should have Norma 6 to win the Game")
-
-        this.setState(new EndGame(this, winner))
+        _winner = Some(winner)
     }
 
     protected[controller] def sendMsg(msg: String): Unit = {
-        if(!debug) println(msg)
+        if(!_debug) println(msg)
     }
 
     protected[controller] def receiveInput(msg: String, numberOfOptions: Int): Int = {
         sendMsg(msg)
         var selected: Int = 1
 
-        if(!debug) selected = StdIn.readInt()
+        if(!_debug) selected = StdIn.readInt()
         else       selected = new Random().nextInt(numberOfOptions) + 1
 
         if( selected < 1 || selected > numberOfOptions)
@@ -153,6 +155,6 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
     }
 
     protected[controller] def debug_=(newDebug: Boolean): Unit = {
-        debug = newDebug
+        _debug = newDebug
     }
 }
