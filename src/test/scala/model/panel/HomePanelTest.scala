@@ -3,7 +3,7 @@ package model.panel
 
 import model.unit.player.{IPlayer, PlayerCharacter}
 
-import cl.uchile.dcc.citric.model.panel.home.HomePanel
+import cl.uchile.dcc.citric.model.panel.concretePanel.HomePanel
 
 class HomePanelTest extends munit.FunSuite {
     var homePanel: HomePanel = _
@@ -18,6 +18,7 @@ class HomePanelTest extends munit.FunSuite {
     override def beforeEach(context: BeforeEach): Unit = {
         player1 = new PlayerCharacter(name1, maxHp, attack, defense, evasion)
         homePanel = new HomePanel(player1)
+        homePanel.addCharacter(player1)
     }
 
     test("A Home Panel only has 1 owner") {

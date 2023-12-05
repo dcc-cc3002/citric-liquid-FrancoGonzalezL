@@ -3,8 +3,7 @@ package model.panel
 
 import model.unit.player.{IPlayer, PlayerCharacter}
 
-import cl.uchile.dcc.citric.model.panel.concretePanel.{BonusPanel, DropPanel, NeutralPanel}
-import cl.uchile.dcc.citric.model.panel.home.HomePanel
+import cl.uchile.dcc.citric.model.panel.concretePanel.{BonusPanel, DropPanel, HomePanel, NeutralPanel}
 
 import scala.util.Random
 

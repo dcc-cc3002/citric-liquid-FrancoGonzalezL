@@ -3,8 +3,7 @@ package model.norma
 
 import model.unit.player.{IPlayer, PlayerCharacter}
 import model.panel.Panel
-import cl.uchile.dcc.citric.model.panel.concretePanel.NeutralPanel
-import cl.uchile.dcc.citric.model.panel.home.HomePanel
+import cl.uchile.dcc.citric.model.panel.concretePanel.{HomePanel, NeutralPanel}
 
 class NormaTest extends munit.FunSuite {
     val StarsGoal: String = "Stars"
@@ -21,6 +20,7 @@ class NormaTest extends munit.FunSuite {
     override def beforeEach(context: BeforeEach): Unit = {
         player = new PlayerCharacter(name1, maxHp, attack, defense, evasion)
         homePanel = new HomePanel(player)
+        homePanel.addCharacter(player)
     }
 
     test("All players start the game with Norma 1"){

@@ -18,6 +18,7 @@ class BonusPanelTest extends munit.FunSuite {
     override def beforeEach(context: BeforeEach): Unit = {
         player1 = new PlayerCharacter(name1, maxHp, attack, defense, evasion)
         bonusPanel = new BonusPanel
+        bonusPanel.addCharacter(player1)
     }
 
     test("A Bonus Panel adds 1 or more stars") {

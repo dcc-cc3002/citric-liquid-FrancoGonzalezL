@@ -4,7 +4,8 @@ package model.panel
 import model.unit.IUnit
 import model.unit.player.{IPlayer, PlayerCharacter}
 
-import cl.uchile.dcc.citric.model.panel.encounter.EncounterPanel
+import cl.uchile.dcc.citric.model.panel.concretePanel.EncounterPanel
+import cl.uchile.dcc.citric.model.unit.wildUnit.concreteWildUnit.{Chicken, RoboBall, Seagull}
 
 class EncounterPanelTest extends munit.FunSuite {
     var encounterPanel: EncounterPanel = _
@@ -21,17 +22,20 @@ class EncounterPanelTest extends munit.FunSuite {
         encounterPanel = new EncounterPanel
     }
 
-    test("The effect of panel will generate a random Unit"){
-        assert(encounterPanel.wildUnit.isEmpty)
+    test("The effect of panel will generate a random Unit that will remain until they are defeated. "){
         encounterPanel.apply(player1)
-        assert(encounterPanel.wildUnit.isDefined)
+        val className: String = encounterPanel.wildUnit.getClass.toString
+        assert(Array(classOf[Chicken].toString, classOf[Seagull].toString, classOf[RoboBall].toString).contains(className))
     }
 
     test("The wildUnits will remain on the panel until they are defeated"){
         encounterPanel.apply(player1)
-        val first_wildUnit: IUnit = encounterPanel.wildUnit.get
-        encounterPanel.wildUnit.get.hp -= 10
+        assert(encounterPanel.wildUnit.hp > 0)
+        val unit: IUnit = encounterPanel.wildUnit
+
+        encounterPanel.wildUnit.hp = 0
+
         encounterPanel.apply(player1)
-        assertNotEquals(first_wildUnit, encounterPanel.wildUnit.get)
+        assertNotEquals(unit, encounterPanel.wildUnit)
     }
 }

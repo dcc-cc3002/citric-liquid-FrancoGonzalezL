@@ -107,10 +107,10 @@ class UnitTest extends munit.FunSuite {
 
     test("An unit should be able to defend, and the damage received should be greater than 0"){
         val prevHp: Int = chickenKiller.hp
-        val attack: Int = chickenKiller.attack(chicken)
+        val attack: Int = chicken.attack(chickenKiller)
         val defendMethod: Int = 1
 
-        chicken.receiveAttack(attack, defendMethod)
+        chickenKiller.receiveAttack(attack, defendMethod)
         assert(chickenKiller.hp < prevHp)
     }
 

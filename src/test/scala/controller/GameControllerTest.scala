@@ -1,96 +1,52 @@
 package cl.uchile.dcc.citric
 package controller
 
-import exceptions.InvalidTransitionException
-import controller.states.Chapter
+import view.NullView
 
-class IGameControllerTest extends munit.FunSuite {
+import cl.uchile.dcc.citric.factory.unit.{PlayerFactory, UnitFactory}
+import cl.uchile.dcc.citric.model.panel.Panel
+import cl.uchile.dcc.citric.model.panel.concretePanel.HomePanel
+import cl.uchile.dcc.citric.model.unit.player.IPlayer
+
+class GameControllerTest extends munit.FunSuite {
+    val playerFactory: UnitFactory[IPlayer] = new PlayerFactory
+    var player: IPlayer = _
     var game: GameController = _
+    val starsGoal: String = "Stars"
 
     override def beforeEach(context: BeforeEach): Unit = {
+        playerFactory.setRandomStats()
+        player = playerFactory.createUnit("Test Player")
         game = new GameController
     }
 
-    test("Valid transitions from PreGame"){
-        /* A list that contains all valid transitions */
-        val validTransitionsList: List[GameController => Unit] = List(
-            (g: GameController) => g.startGame()
-        )
-        validTransitionsList.foreach(f => {
-            try {
-                f(game)
-            } catch {
-                case e: InvalidTransitionException =>
-                    throw new AssertionError(
-                        s"An unexpected exception was thrown: ${e.getMessage}"
-                    )
-            }
-        })
-    }
+    test("When a player has achieved Norma lvl 6 the winner should be defined. ") {
+        game.setView(new NullView)
 
-    test("Invalid transitions from PreGame"){
-        /* A list that contains all invalid transitions */
-        val invalidTransitionsList: List[GameController => Unit] = List(
-            (g: GameController) => g.finishGame(),
-            (g: GameController) => g.recoverPlayer(),
-            (g: GameController) => g.playTurn(),
-            (g: GameController) => g.stop(),
-            (g: GameController) => g.finishCombat(),
-            (g: GameController) => g.nextTurn(),
-            (g: GameController) => g.playAgain()
-        )
+        /* Register the controller */
+        player.registerObserver(game)
+        /* new Home Panel for the Norma Check. */
+        val homePanel: Panel = new HomePanel(player)
+        /* Player should be on the Panel. */
+        homePanel.addCharacter(player)
 
-        /* Test all transitions */
-        invalidTransitionsList.foreach(f => {
-            interceptMessage[InvalidTransitionException](
-                "An invalid transition was tried -- From PreGame"
-            ) {
-                f(game)
-            }
-        })
+        /* A lot of stars. */
+        player.stars += 1000000
 
-    }
+        /* There is no winner initially. */
+        assert(game.winner.isEmpty)
 
-    test("Valid transitions from Chapter") {
-        /* A list that contains all valid transitions */
-        val validTransitionsList: List[GameController => Unit] = List(
-            (g: GameController) => g.finishGame(),
-            (g: GameController) => g.recoverPlayer(),
-            (g: GameController) => g.playTurn(),
-        )
-        validTransitionsList.foreach(f => {
-            try {
-                game.setState(new Chapter(game))
-                f(game)
-            } catch {
-                case e: InvalidTransitionException =>
-                    throw new AssertionError(
-                        s"An unexpected exception was thrown: ${e.getMessage}"
-                    )
-            }
-        })
-    }
+        /* from norma 1 to norma 6 */
+        for(_ <- 2 to 6){
+            assert(player.goal = starsGoal)
+            homePanel.apply(player)
+        }
 
-    test("Invalid transitions from Chapter") {
-        game.startGame()
-        /* A list that contains all invalid transitions */
-        val invalidTransitionsList: List[GameController => Unit] = List(
-            (g: GameController) => g.startGame(),
-            (g: GameController) => g.stop(),
-            (g: GameController) => g.finishCombat(),
-            (g: GameController) => g.nextTurn(),
-            (g: GameController) => g.playAgain()
-        )
-
-        /* Test all transitions */
-        invalidTransitionsList.foreach(f => {
-            interceptMessage[InvalidTransitionException](
-                "An invalid transition was tried -- From Chapter"
-            ) {
-                f(game)
-            }
-        })
-
+        /* Now winner is defined. */
+        assertEquals(player.normaLvl, 6)
+        assert(game.winner.isDefined)
+        /* And the winner is the player with Norma lvl 6. */
+        assertEquals(player, game.winner.get)
     }
 }
 

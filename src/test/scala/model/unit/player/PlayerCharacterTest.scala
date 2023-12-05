@@ -72,7 +72,7 @@ class PlayerCharacterTest extends munit.FunSuite {
     }
 
     test("If the player defeats another player, the player should receive 2 victories"){
-        val otherPlayer: IUnit = new PlayerCharacter(_name="John Doe", maxHp, attack, defense, evasion)
+        val otherPlayer: IUnit = new PlayerCharacter("John Doe", maxHp, attack, defense, evasion)
         val prevVictories: Int = character.victories
         otherPlayer.hp = 0    // hp == 0 => has been defeated
         otherPlayer.defeated(character)
