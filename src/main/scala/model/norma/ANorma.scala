@@ -4,7 +4,7 @@ package model.norma
 import model.unit.player.IPlayer
 import model.panel.Panel
 import model.norma.goals.{IGoal, StarsGoal, VictoriesGoal}
-import cl.uchile.dcc.citric.model.panel.home.HomePanel
+import cl.uchile.dcc.citric.model.panel.concretePanel.HomePanel
 
 /** An abstract class representing a Norma.
  *
@@ -12,14 +12,8 @@ import cl.uchile.dcc.citric.model.panel.home.HomePanel
  */
 abstract class ANorma(player: IPlayer) extends INorma{
 
-    private val victories_s: String = "Victories"
-    private val stars_s: String = "Stars"
-
-    /** Current goal of the player.
-     *
-     * It needs to be initialized.
-     */
-    private var _goal: Option[IGoal] = None
+    /* Returns the maximum Norm level achievable in the game. */
+    override def maxNormaLvl: Int = 6
 
     override def goal: String = {
         if (_goal.isEmpty) ""
@@ -38,11 +32,21 @@ abstract class ANorma(player: IPlayer) extends INorma{
             false
     }
 
-    override def normaCheck(panel: Panel): Option[INorma] = {
+    override def normaCheck(panel: HomePanel): Option[INorma] = {
         if (_goal.isEmpty) None
         else if(_goal.get.achievedRequirements){
             Some(nextNormaLvl)
         }else
             None
     }
+
+
+    /** Current goal of the player.
+     *
+     * It needs to be initialized.
+     */
+    private var _goal: Option[IGoal] = None
+
+    private val victories_s: String = "Victories"
+    private val stars_s: String = "Stars"
 }

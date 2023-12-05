@@ -7,7 +7,8 @@ import util.Random
 
 
 /** Abstract class representing the Wild Units. */
-abstract class AWildUnit(_maxHpStat: Int, _random: Random) extends AUnit(_maxHpStat, _random) with IWildUnit {
+abstract class AWildUnit(maxHpStat: Int, randomNumberGenerator: Random)
+    extends AUnit(maxHpStat, randomNumberGenerator) with IWildUnit {
 
     override def defeated(attacker: IUnit): Unit = {
         if(hp > 0) return

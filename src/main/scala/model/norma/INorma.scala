@@ -1,8 +1,7 @@
 package cl.uchile.dcc.citric
 package model.norma
 
-import model.panel.Panel
-import model.norma.goals.IGoal
+import cl.uchile.dcc.citric.model.panel.concretePanel.HomePanel
 
 /** Represents the Norma of the player.
  *
@@ -49,5 +48,7 @@ trait INorma extends HasGoal {
      * @param panel The panel where the player is located.
      * @return True if the norma level has successfully increased.
      */
-    def normaCheck(panel: Panel): Option[INorma]
+    def normaCheck(panel: HomePanel): Option[INorma]
+
+    def maxNormaLvl: Int
 }

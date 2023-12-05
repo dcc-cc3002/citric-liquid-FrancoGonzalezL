@@ -12,6 +12,8 @@ import wildUnit.IWildUnit
  */
 trait IUnit {
 
+    def toString: String
+
     /** The name of the unit */
     def name: String
 

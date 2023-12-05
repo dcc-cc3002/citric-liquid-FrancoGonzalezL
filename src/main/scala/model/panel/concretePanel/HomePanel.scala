@@ -1,5 +1,5 @@
 package cl.uchile.dcc.citric
-package model.panel.home
+package model.panel.concretePanel
 
 import model.panel.APanel
 import model.unit.player.IPlayer
@@ -8,9 +8,9 @@ import model.unit.player.IPlayer
  *
  * @param _owner The player that owns the Panel
  */
-class HomePanel(_owner: IPlayer) extends APanel with Home {
+class HomePanel(_owner: IPlayer) extends APanel {
 
-    override def owner: IPlayer = _owner
+    def owner: IPlayer = _owner
 
     /** Gives the player 1 point of life and performs a Norma Check
      *

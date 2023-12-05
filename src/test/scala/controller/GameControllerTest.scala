@@ -4,7 +4,7 @@ package controller
 import exceptions.InvalidTransitionException
 import controller.states.Chapter
 
-class ControllerTest extends munit.FunSuite {
+class IGameControllerTest extends munit.FunSuite {
     var game: GameController = _
 
     override def beforeEach(context: BeforeEach): Unit = {

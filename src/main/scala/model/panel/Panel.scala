@@ -18,6 +18,8 @@ import scala.collection.mutable.ArrayBuffer
  */
 trait Panel {
 
+    def toString: String
+
     def nextPanels: ArrayBuffer[Panel]
 
     def characters: ArrayBuffer[IPlayer]

@@ -2,12 +2,12 @@ package cl.uchile.dcc.citric
 package controller.states.playerTurn
 
 import controller.GameController
-import controller.states.{GameState, LandingPanel}
+import controller.states.GameState
 import model.unit.player.IPlayer
 import model.panel.Panel
 
-import cl.uchile.dcc.citric.controller.states.combat.CombatPvsP
-import cl.uchile.dcc.citric.model.panel.home.Home
+import controller.states.combat.CombatPvsP
+import view.msg.{HomeMsg, PathMsg}
 
 /** The Player Turns.
  *
@@ -19,60 +19,48 @@ class PlayerTurn(controller: GameController) extends GameState(controller) {
 
     override def play(): Unit = {
         val player: IPlayer = controller.currentCharacter
+
         val chapterStars: Int = (controller.chapter / 5) + 1
         player.stars += chapterStars
 
-        moves = player.rollDice()
-        while (moves > 0) {
-            moving()
-            moves -= 1
+        movesLeft = player.rollDice()
+        while (moving(player)) {
+            movesLeft -= 1
         }
         this.stop()
     }
 
-    override def stop(): Unit = {
-        moves = 0
-        changeState(new CombatPvsP(controller))
-    }
-
-    private def moving(): Unit = {
+    private def moving(player: IPlayer): Boolean = {
         val panel: Panel = controller.currentPanel
-        val player: IPlayer = controller.currentCharacter
+        if (movesLeft < 1) return false
 
-        if(panel.canStopHere(player) && wantsToStop()) {
+        if(panel.canStopHere(player) && wantsToStop(player)) {
             stop()
         } else if(panel.nextPanelsCount == 1){
             val nextPanel: Panel = panel.nextPanels.head
             controller.moveCharacterToPanel(nextPanel)
         } else {
-            selectPath()
+            selectPath(player, panel)
         }
+
+        movesLeft > 0
     }
 
-    private def selectPath(): Unit = {
-        val panel: Panel = controller.currentPanel
-        val init: Int = 1
-        var pathMsg: String = s"""${controller.currentCharacter.name}
-                                   |Select a panel to continue:
-                                   |""".stripMargin
-        pathMsg += panel.nextPanelsToString(init)
-        val selected: Int = controller.receiveInput(pathMsg, panel.nextPanelsCount) - init
-        val nextPanel: Panel = panel.getNextPanelByIndex(selected)
+    private def selectPath(player: IPlayer, panel: Panel): Unit = {
+        val selected: Int = controller.view.receiveIntInput(new PathMsg(player, panel.nextPanels.toArray))
+        val nextPanel: Panel = panel.nextPanels(selected)
         controller.moveCharacterToPanel(nextPanel)
     }
 
-    private def wantsToStop(): Boolean = {
-        val selected: Int = controller.receiveInput(homePanelMsg, homePanelOptions)
-        if(selected == 1) true
-        else false
+    private def wantsToStop(player: IPlayer): Boolean = {
+        val selected: Int = controller.view.receiveIntInput(new HomeMsg(player))
+        selected == 1
     }
 
-    private val homePanelMsg: String =
-        s"""${controller.currentCharacter.name}
-           |You are on a Home Panel, Do you want to stop?
-           |1 -> Yes
-           |2 -> No  """.stripMargin
+    override def stop(): Unit = {
+        movesLeft = 0
+        changeState(new CombatPvsP(controller))
+    }
 
-    private val homePanelOptions: Int = 2
-    private var moves: Int = 0
+    private var movesLeft: Int = 0
 }

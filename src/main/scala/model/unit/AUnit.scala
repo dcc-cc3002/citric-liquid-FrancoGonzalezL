@@ -1,14 +1,14 @@
 package cl.uchile.dcc.citric
 package model.unit
 
-import cl.uchile.dcc.citric.exceptions.InvalidInputException
+import exceptions.InvalidInputException
 
 import util.Random
 
 /** Abstract class representing a Unit. */
 abstract class AUnit(
     /* This val is use to set the initial hp equal to maxHp*/
-    _maxHp: Int,
+    maxHpStat: Int,
 
     /** The number generator used for the rollDice method */
     val randomNumberGenerator: Random = new Random()
@@ -16,7 +16,7 @@ abstract class AUnit(
 ) extends IUnit {
 
     /** Current amount of hit points */
-    private var _hp: Int = _maxHp
+    private var _hp: Int = maxHpStat
 
     /** Current amount of stars */
     private var _stars: Int = 0
@@ -37,7 +37,7 @@ abstract class AUnit(
 
     override def attack(unit: IUnit): Int = {
         if(hp == 0 || unit.hp == 0) 0
-        math.max(0, attack + rollDice())
+        else math.max(0, this.attack + rollDice())
     }
 
     override def defend(attack: Int): Unit = {
@@ -60,5 +60,9 @@ abstract class AUnit(
             evade(attack)
         else
             throw new InvalidInputException("Input should be 1 or 2.")
+    }
+
+    override def toString: String = {
+        s"Name: $name, Hp: $hp,  Attack: $attack, Defense: $defense, Evasion: $evasion"
     }
 }

@@ -2,15 +2,13 @@ package cl.uchile.dcc.citric
 package controller
 
 import controller.states.startAndEnd.PreGame
+
 import states._
-import states.startAndEnd._
 import model.unit.player.IPlayer
 import model.panel.Panel
 import observer.{ISubject, Observer}
-import exceptions.InvalidInputException
-import scala.io.StdIn
-import scala.collection.mutable
-import scala.util.Random
+import view.msg.{PlayAgainMsg, StringMsg}
+import view.{IView, View}
 
 /** Represent The Game.
  *
@@ -34,16 +32,46 @@ import scala.util.Random
  */
 class GameController extends GameTransitions with GameChecks with Observer[IPlayer] {
 
-    /** Initial Game State */
-    private var state: GameState = new PreGame(this)
+    /* To Simulate the entire Game. */
+    def run(): Unit = {
+        if (!isStarting) throw new AssertionError("The Game has not started.")
 
-    private val _characters: mutable.Queue[IPlayer] = mutable.Queue()
-    private var _chapter: Int = 0
-    private var _turn: Int = 0
-    private var _panels: Map[IPlayer, Panel] = Map()
-    private var _debug: Boolean = false
-    private var _winner: Option[IPlayer] = None
+        while (!hasFinished)
+            play()
+        play()
 
+        val selection: Int = view.receiveIntInput(new PlayAgainMsg)
+
+        if (selection == 1) run()
+        else view.sendMsg(new StringMsg("Good Bye"))
+    }
+
+    /* To Simulate a step in the game. */
+    private def play(): Unit = state.play()
+
+    protected[controller] def advanceTurn(): Unit = {
+        _turn = (_turn + 1)%numberOfPlayers
+    }
+
+    /* When a player has achieved Norma lvl 6, the controller should be notified. */
+    override def update(subject: ISubject[IPlayer], msg: IPlayer): Unit = {
+        val winner: IPlayer = msg
+        if (winner.normaLvl < 6) throw new AssertionError("The player should have Norma 6 to win the Game")
+        _winner = Some(winner)
+    }
+
+    /* This should change the View. Useful for debugging. */
+    def setView(view: IView): Unit = {
+        _view = view
+    }
+
+    /* Getter for the variable Turn. */
+    def turn: Int = _turn + 1
+
+    /* Getter for the variable Chapter. */
+    def chapter: Int = _chapter
+
+    /* Getter for the winner of the game. */
     protected[controller] def winner: Option[IPlayer] = _winner
 
     /** This function should be called every time the Game State changes.
@@ -54,22 +82,28 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
         state = newState
     }
 
-    def turn: Int = _turn
+    /* Getter for the view of the Game. */
+    protected[controller] def view: IView = _view
 
-    def chapter: Int = _chapter
 
     /** Returns the Player that has to play its turn. */
-    protected[controller] def currentCharacter: IPlayer = _characters.front
+    protected[controller] def currentCharacter: IPlayer = _characters(turn)
+
+    protected[controller] def addCharacter(player: IPlayer): Unit = {
+        if(_characters.length < numberOfPlayers)
+            _characters = _characters :+ player
+        else
+            throw new AssertionError("No more players can be added to the Game.")
+    }
 
     protected[controller] def currentPanel: Panel = {
-        val panel: Option[Panel] = _panels.get(this.currentCharacter)
+        val panel: Option[Panel] = _playerPositions.get(this.currentCharacter)
         if (panel.isDefined) panel.get
         else throw new AssertionError("Player is Not associated with a Panel")
     }
 
     protected[controller] def advanceChapter(): Unit = {
-        val msgChapter: String = s"Chapter ${_chapter}"
-        sendMsg(msgChapter)
+        view.sendMsg(new StringMsg(s"Chapter ${this.chapter}"))
         _chapter += 1
     }
 
@@ -79,82 +113,36 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
 
         currentPanel.removeCharacter(currentCharacter)
         panel.addCharacter(currentCharacter)
-        _panels = _panels + (currentCharacter -> panel)
+        _playerPositions = _playerPositions + (currentCharacter -> panel)
     }
 
-    /** Rotates the List of characters, useful to change Player Turns. */
-    protected[controller] def rotateCharacters(): Unit = {
-        _characters.enqueue(_characters.dequeue())
-        _turn = (this.turn+1) % 4
-    }
-
-
-    /** Depends on the state.*/
-    protected[controller] def play(): Unit = state.play()
-
-    def startGame(debug: Boolean = false): Unit = state.startGame(debug)
-
+    def startGame(): Unit = state.startGame()
     def finishGame(): Unit = state.finishGame()
-
     def recoverPlayer(): Unit = state.recoverPlayer()
-
     def playTurn(): Unit = state.playTurn()
-
     def stop(): Unit = state.stop()
-
     def finishCombat(): Unit = state.finishCombat()
-
-    def encounterPanel(): Unit = state.encounterPanel()
-
+    def encounter(): Unit = state.encounter()
     def nextTurn(): Unit = state.nextTurn()
-
     def playAgain(): Unit = state.playAgain()
-
     def isStarting: Boolean = state.isStarting
-
     def hasFinished: Boolean = state.hasFinished
 
 
-    /* Winner of the Game */
-    override def update(subject: ISubject[IPlayer], msg: IPlayer): Unit = {
-        val winner: IPlayer = msg
-        if (winner.normaLvl < 6) throw new AssertionError("The player should have Norma 6 to win the Game")
-        _winner = Some(winner)
-    }
-
-    protected[controller] def sendMsg(msg: String): Unit = {
-        if(!_debug) println(msg)
-    }
-
-    protected[controller] def receiveInput(msg: String, numberOfOptions: Int): Int = {
-        sendMsg(msg)
-        var selected: Int = 1
-
-        if(!_debug) selected = StdIn.readInt()
-        else       selected = new Random().nextInt(numberOfOptions) + 1
-
-        if( selected < 1 || selected > numberOfOptions)
-            throw new InvalidInputException(s"Input should be greater than 0 and less than $numberOfOptions")
-
-        selected
-    }
-
-    def run(debug: Boolean = false): Unit = {
-        if(!isStarting) throw new AssertionError("The Game has not started.")
-
-        while(!hasFinished)
-            play()
-        play()
-
-        val msg: String = "Play Again?"
-        val numberOfOptions: Int = 2
-        val selection: Int = receiveInput(msg, numberOfOptions)
-
-        if(selection == 1) run()
-        else sendMsg("Good Bye")
-    }
-
-    protected[controller] def debug_=(newDebug: Boolean): Unit = {
-        _debug = newDebug
-    }
+    /** Initial Game State */
+    private var state: GameState = new PreGame(this)
+    /* An Array with all the characters, useful for the turns. */
+    private var _characters: Array[IPlayer] = Array()
+    /* The current number of the Chapter */
+    private var _chapter: Int = 0
+    /* The turn of a player. 0 <= turn <= 3. it is initially -1 because new Chapter always adds 1. */
+    private var _turn: Int = -1
+    /* The positions of all the players are mapped on this var. */
+    private var _playerPositions: Map[IPlayer, Panel] = Map()
+    /* The winner of the game. */
+    private var _winner: Option[IPlayer] = None
+    /* The view that the controller is going to use. Can be changed. */
+    private var _view: IView = new View()
+    /* The number of Players in a Game. */
+    protected[controller] val numberOfPlayers: Int = 4
 }

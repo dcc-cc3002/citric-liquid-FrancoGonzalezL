@@ -31,7 +31,7 @@ class GameState(controller: GameController) extends GameTransitions with GameChe
      */
     private def exception(from: String) = throw new InvalidTransitionException(s"From $from")
 
-    def startGame(debug: Boolean = false): Unit = exception(this.getClass.getSimpleName)
+    def startGame(): Unit = exception(this.getClass.getSimpleName)
 
     def finishGame(): Unit = exception(this.getClass.getSimpleName)
 
@@ -43,7 +43,7 @@ class GameState(controller: GameController) extends GameTransitions with GameChe
 
     def finishCombat(): Unit = exception(this.getClass.getSimpleName)
 
-    def encounterPanel(): Unit = exception(this.getClass.getSimpleName)
+    def encounter(): Unit = exception(this.getClass.getSimpleName)
 
     def nextTurn(): Unit = exception(this.getClass.getSimpleName)
 

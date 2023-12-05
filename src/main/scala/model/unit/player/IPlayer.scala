@@ -3,7 +3,8 @@ package model.unit
 package player
 
 import model.norma.HasGoal
-import model.panel.home.Home
+import model.panel.concretePanel.HomePanel
+import observer.{ISubject, Subject}
 
 /** Represents a Player.
  *
@@ -19,7 +20,7 @@ import model.panel.home.Home
  * To exit this phase, the player must roll a die and obtain a quantity greater than or equal to
  * the required amount for recovery. If they succeed in recovering, then they can immediately take their turn.
  */
-trait IPlayer extends IUnit with HasGoal {
+trait IPlayer extends  IUnit with HasGoal with ISubject[IPlayer] {
 
     /** Returns the current amount of victories */
     def victories: Int
@@ -46,5 +47,5 @@ trait IPlayer extends IUnit with HasGoal {
      *
      * @param panel The Panel where the player is located.
      */
-    def normaCheck(panel: Home): Unit
+    def normaCheck(panel: HomePanel): Unit
 }

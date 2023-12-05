@@ -3,11 +3,11 @@ package model.unit.player
 
 import model.unit.wildUnit.IWildUnit
 import model.unit.{AUnit, IUnit}
-import model.norma.{ANorma, INorma}
-import model.panel.Panel
-import cl.uchile.dcc.citric.model.norma.levels.NormaLvl1
+import model.norma.INorma
+import model.norma.levels.NormaLvl1
+import model.panel.concretePanel.HomePanel
 
-import cl.uchile.dcc.citric.model.panel.home.{Home, HomePanel}
+import cl.uchile.dcc.citric.observer.Observer
 
 import scala.util.Random
 
@@ -31,12 +31,12 @@ import scala.util.Random
   * an instance of the `Random` class but can be replaced if different random
   * generation behaviors are desired.
   *
-  * @param _name The name of the player. This is an identifier and should be unique.
-  * @param _maxHp The maximum health points a player can have. It represents the player's endurance.
-  * @param _attack The player's capability to deal damage to opponents.
-  * @param _defense The player's capability to resist or mitigate damage from opponents.
-  * @param _evasion The player's skill to completely avoid certain attacks.
-  * @param _randomNumberGenerator A utility to generate random numbers. Defaults to a new `Random`
+  * @param namePlayer The name of the player. This is an identifier and should be unique.
+  * @param maxHpStat The maximum health points a player can have. It represents the player's endurance.
+  * @param attackStat The player's capability to deal damage to opponents.
+  * @param defenseStat The player's capability to resist or mitigate damage from opponents.
+  * @param evasionStat The player's skill to completely avoid certain attacks.
+  * @param randomNumberGenerator A utility to generate random numbers. Defaults to a new `Random`
   *                              instance.
   *
   * @author [[https://github.com/danielRamirezL/ Daniel Ramírez L.]]
@@ -46,13 +46,24 @@ import scala.util.Random
   * @author [[https://github.com/frgonzal/ Franco González L.]]
   */
 class PlayerCharacter(
-     _name: String,
-     _maxHp: Int,
-     _attack: Int,
-     _defense: Int,
-     _evasion: Int,
-     _randomNumberGenerator: Random = new Random()
- ) extends AUnit(_maxHp, _randomNumberGenerator) with IPlayer {
+     namePlayer: String,
+     maxHpStat: Int,
+     attackStat: Int,
+     defenseStat: Int,
+     evasionStat: Int,
+     randomNumberGenerator: Random = new Random()
+
+ ) extends AUnit(maxHpStat, randomNumberGenerator) with IPlayer {
+
+    override def name: String = namePlayer
+
+    override def maxHp: Int = maxHpStat
+
+    override def attack: Int = attackStat
+
+    override def defense: Int = defenseStat
+
+    override def evasion: Int = evasionStat
 
     /** Victories counter. */
     private var _victories: Int = 0
@@ -61,7 +72,7 @@ class PlayerCharacter(
     private var ko: Boolean = false
 
     /** Norma of the player */
-    private var _Norma: INorma = new NormaLvl1(player=this)
+    private var _norma: INorma = new NormaLvl1(player=this)
 
     override def victories: Int = _victories
 
@@ -94,20 +105,23 @@ class PlayerCharacter(
         }
     }
 
-    override def goal: String = _Norma.goal
+    override def goal: String = _norma.goal
 
-    override def normaLvl: Int = _Norma.normaLvl
+    override def normaLvl: Int = _norma.normaLvl
 
     override def goal_=(option: String): Boolean = {
-        _Norma.goal = option
+        _norma.goal = option
     }
 
-    override def normaCheck(panel: Home): Unit = {
+    override def normaCheck(panel: HomePanel): Unit = {
         if (!panel.containsCharacter(this)) throw new AssertionError("Player should be on a HomePanel")
 
-        val newNorma: Option[INorma] = _Norma.normaCheck(panel)
-        if(newNorma.isDefined)
-            _Norma = newNorma.get
+        val newNorma: Option[INorma] = _norma.normaCheck(panel)
+        if(newNorma.isDefined) {
+            _norma = newNorma.get
+        }
+        if(normaLvl == _norma.maxNormaLvl)
+            notifyObservers(response=this)
     }
 
     override def rewardFromWildUnit(defeated: IWildUnit): Unit = {
@@ -130,16 +144,20 @@ class PlayerCharacter(
         defeated.stars -= starsReward
     }
 
-    override def name: String = _name
-
-    override def maxHp: Int = _maxHp
-
-    override def attack: Int = _attack
-
-    override def defense: Int = _defense
-
-    override def evasion: Int = _evasion
-
     /* Set the hp equal to the maxHp */
     this.hp = maxHp
+
+
+    private var observers: Array[Observer[IPlayer]] = Array()
+
+    override def registerObserver(o: Observer[IPlayer]): Unit = {
+        observers = observers :+ o
+    }
+
+    override def notifyObservers(response: IPlayer): Unit = {
+        observers.foreach(o => {
+            o.update(this, this)
+        })
+    }
+
 }

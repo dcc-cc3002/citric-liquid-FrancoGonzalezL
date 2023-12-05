@@ -7,7 +7,7 @@ trait GameTransitions {
     /** startGame is called to initialize the game state and transition
      *  from the PreGame state to the StartGame state.
      */
-    def startGame(debug: Boolean = false): Unit
+    def startGame(): Unit
 
     /** finishGame is called when the game has come to an end. */
     def finishGame(): Unit
@@ -32,7 +32,7 @@ trait GameTransitions {
     /** encounterPanelEffect is called when a player lands on a EncounterPanel,
      *  this should trigger an battle between the player and a Wild Unit.
      */
-    def encounterPanel(): Unit
+    def encounter(): Unit
 
     /** playAgain is called when the current game ends and there is an option
      *  to start over or play another round.

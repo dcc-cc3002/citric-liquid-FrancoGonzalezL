@@ -110,4 +110,15 @@ abstract class APanel extends Panel {
     }
 
     override def canStopHere(player: IPlayer): Boolean = false
+
+    override def toString: String = {
+        var s: String =
+            s"""Type of Panel: ${this.getClass.getSimpleName}
+               |Players on This Panel: |""".stripMargin
+        characters.foreach( char => {
+            s += s"${char.name}, "
+        })
+
+        s
+    }
 }
