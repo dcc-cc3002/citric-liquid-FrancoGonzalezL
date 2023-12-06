@@ -25,8 +25,8 @@ class PlayerFactory extends AUnitFactory[IPlayer] {
         super.factoryIsReady && maxHp.isDefined && attack.isDefined && defense.isDefined && evasion.isDefined
     }
 
-    var maxHp: Option[Int] = None
-    var attack: Option[Int] = None
-    var defense: Option[Int] = None
-    var evasion: Option[Int] = None
+    private var maxHp: Option[Int] = None
+    private var attack: Option[Int] = None
+    private var defense: Option[Int] = None
+    private var evasion: Option[Int] = None
 }

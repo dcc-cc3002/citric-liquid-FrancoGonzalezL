@@ -24,8 +24,8 @@ abstract class AUnitFactory[T] extends UnitFactory[T] {
         random.isDefined
     }
 
-    var random: Option[Random] = None
-    val randomCreator: Random = new Random(100)
+    protected var random: Option[Random] = None
+    protected var randomCreator: Random = new Random(100)
     private var _min: Int = 2
     private var _max: Int = 6
 }
