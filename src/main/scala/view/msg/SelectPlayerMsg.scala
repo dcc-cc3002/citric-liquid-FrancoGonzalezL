@@ -4,7 +4,7 @@ package view.msg
 import model.unit.player.IPlayer
 
 class SelectPlayerMsg(currentPlayer: IPlayer, options: Array[IPlayer]) extends ADisplayable {
-    override def max: Int = options.length + 1
+    override def max: Int = options.length + 2
 
     override def toString: String = {
         var msg: String =
@@ -14,7 +14,7 @@ class SelectPlayerMsg(currentPlayer: IPlayer, options: Array[IPlayer]) extends A
                |""".stripMargin
 
         for((player, index) <- options.zipWithIndex){
-           msg +=  s"${index + this.min} -> ${player.toString} \n"
+           msg +=  s"${index + this.min + 1} -> ${player.toString} \n"
         }
 
         msg
