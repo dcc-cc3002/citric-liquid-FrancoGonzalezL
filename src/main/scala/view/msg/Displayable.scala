@@ -10,7 +10,7 @@ trait Displayable {
     /** Returns the message that has to be displayed to the user. */
     def toString: String
 
-    /** For Int inputs, this is the upper bound.  */
+    /** For Int inputs, this is the upper bound. */
     def max: Int
 
     /** For Int inputs, this is the lower bound. */

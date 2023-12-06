@@ -16,7 +16,7 @@ abstract class AView extends IView {
         this.display(msg)
     }
 
-    override def receiveIntInput(msg: Displayable): Int = {
+    override def receiveIntInput(msg: Displayable, default: Option[Int] = None): Int = {
         this.display(msg)
 
         val min: Int = msg.min
@@ -25,7 +25,7 @@ abstract class AView extends IView {
         val selected = this.getInt(max)
 
         if (selected < min || max < selected) {
-            val incorrectInputMsg: String = s"Incorrect Input: should be  $min <= 'input' < $max"
+            val incorrectInputMsg: String = s"Incorrect Input: should be  $min <= 'input' <= $max"
             sendMsg(new StringMsg(incorrectInputMsg))
             receiveIntInput(msg)
 

@@ -52,7 +52,7 @@ class PlayerTurn(controller: GameController) extends GameState(controller) {
 
     private def selectPath(player: IPlayer, panel: Panel): Unit = {
         val selected: Int = controller.view.receiveIntInput(new PathMsg(player, panel.nextPanels.toArray))
-        val nextPanel: Panel = panel.nextPanels(selected)
+        val nextPanel: Panel = panel.nextPanels(selected - 1)
         controller.moveCharacterToPanel(nextPanel)
     }
 

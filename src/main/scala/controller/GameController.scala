@@ -42,10 +42,11 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
             play()
         play()
 
-        val selection: Int = view.receiveIntInput(new PlayAgainMsg)
-
-        if (selection == 1) run()
-        else view.sendMsg(new StringMsg("Good Bye"))
+        val selection: Int = view.receiveIntInput(new PlayAgainMsg, default = Some(2))
+        if (selection == 1)
+            run()
+        else
+            view.sendMsg(new StringMsg("Good Bye"))
     }
 
     /* To Simulate a step in the game. */
