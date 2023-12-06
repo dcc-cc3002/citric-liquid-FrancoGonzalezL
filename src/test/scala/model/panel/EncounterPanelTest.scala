@@ -24,18 +24,22 @@ class EncounterPanelTest extends munit.FunSuite {
 
     test("The effect of panel will generate a random Unit that will remain until they are defeated. "){
         encounterPanel.apply(player1)
-        val className: String = encounterPanel.wildUnit.getClass.toString
+        assert(encounterPanel.wildUnit.isDefined)
+        val className: String = encounterPanel.wildUnit.get.getClass.toString
         assert(Array(classOf[Chicken].toString, classOf[Seagull].toString, classOf[RoboBall].toString).contains(className))
     }
 
     test("The wildUnits will remain on the panel until they are defeated"){
         encounterPanel.apply(player1)
-        assert(encounterPanel.wildUnit.hp > 0)
-        val unit: IUnit = encounterPanel.wildUnit
 
-        encounterPanel.wildUnit.hp = 0
+        assert(encounterPanel.wildUnit.isDefined)
+        assert(encounterPanel.wildUnit.get.hp > 0)
+
+        val unit: IUnit = encounterPanel.wildUnit.get
+        encounterPanel.wildUnit.get.hp = 0
 
         encounterPanel.apply(player1)
-        assertNotEquals(unit, encounterPanel.wildUnit)
+        assert(encounterPanel.wildUnit.isDefined)
+        assertNotEquals(unit, encounterPanel.wildUnit.get)
     }
 }
