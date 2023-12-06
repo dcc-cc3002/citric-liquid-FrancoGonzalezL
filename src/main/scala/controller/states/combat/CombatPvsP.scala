@@ -19,11 +19,18 @@ class CombatPvsP(controller: GameController) extends ACombat(controller){
     override def play(): Unit = {
         val panel: Panel = controller.currentPanel
 
-        val selection = controller.view.receiveIntInput(new SelectPlayerMsg(controller.currentCharacter, panel.characters.toArray))
-        if(selection == 1)
-            finishCombat()
-        else
-            this.battle(panel.characters(selection))
+        /* If the player is the only one on a panel. */
+        if(panel.charactersCount > 1) {
+            /* To ensure that the player will not be in the options. */
+            val options: Array[IPlayer] = panel.characters.filterNot(_ == controller.currentCharacter).toArray
+            /* Returns a value between 1 and options.length */
+            val selection = controller.view.receiveIntInput(new SelectPlayerMsg(controller.currentCharacter, options))
+
+            /** selection == 1 means continue. */
+            if (selection > 1)
+                this.battle(options(selection - 2))
+        }
+        finishCombat()
     }
 
     override def finishCombat(): Unit = this.changeState(new LandingPanel(controller))

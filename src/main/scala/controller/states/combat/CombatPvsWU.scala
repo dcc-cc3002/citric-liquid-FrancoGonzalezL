@@ -14,13 +14,12 @@ class CombatPvsWU(controller: GameController) extends ACombat(controller){
 
     override def play(): Unit = {
         val panel: Panel = controller.currentPanel
-        panel match {
-            case p: EncounterPanel => this.battle(p.wildUnit)
-        }
+        if (panel.wildUnit.isDefined)
+            this.battle(panel.wildUnit.get)
+
         nextTurn()
     }
 
     override def nextTurn(): Unit = this.changeState(new Chapter(controller))
-
 }
 

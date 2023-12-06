@@ -2,7 +2,6 @@ package cl.uchile.dcc.citric
 package controller
 
 import controller.states.startAndEnd.PreGame
-
 import states._
 import model.unit.player.IPlayer
 import model.panel.Panel
@@ -34,7 +33,8 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
 
     /* To Simulate the entire Game. */
     def run(): Unit = {
-        if (!isStarting) throw new AssertionError("The Game has not started.")
+        if (this.isStarting)
+            throw new AssertionError("The Game has not started.")
 
         while (!hasFinished)
             play()
@@ -50,7 +50,12 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
     private def play(): Unit = state.play()
 
     protected[controller] def advanceTurn(): Unit = {
-        _turn = (_turn + 1)%numberOfPlayers
+        _turn += 1
+
+        if(_turn == numberOfPlayers) {
+            advanceChapter()
+            _turn = 0
+        }
     }
 
     /* When a player has achieved Norma lvl 6, the controller should be notified. */
@@ -66,7 +71,7 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
     }
 
     /* Getter for the variable Turn. */
-    def turn: Int = _turn + 1
+    def turn: Int = _turn
 
     /* Getter for the variable Chapter. */
     def chapter: Int = _chapter
@@ -97,23 +102,18 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
     }
 
     protected[controller] def currentPanel: Panel = {
-        val panel: Option[Panel] = _playerPositions.get(this.currentCharacter)
+        val panel: Option[Panel] = currentCharacter.currentPanel
         if (panel.isDefined) panel.get
         else throw new AssertionError("Player is Not associated with a Panel")
     }
 
     protected[controller] def advanceChapter(): Unit = {
-        view.sendMsg(new StringMsg(s"Chapter ${this.chapter}"))
         _chapter += 1
+        view.sendMsg(new StringMsg(s"\nChapter ${this.chapter}!! Good luck. \n"))
     }
 
     protected[controller] def moveCharacterToPanel(panel: Panel): Unit = {
-        if (!currentPanel.containsNextPanel(panel))
-            throw new AssertionError("Player is not allowed to move to this Panel")
-
-        currentPanel.removeCharacter(currentCharacter)
-        panel.addCharacter(currentCharacter)
-        _playerPositions = _playerPositions + (currentCharacter -> panel)
+        currentCharacter.moveToPanel(panel)
     }
 
     def startGame(): Unit = state.startGame()
@@ -134,11 +134,9 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
     /* An Array with all the characters, useful for the turns. */
     private var _characters: Array[IPlayer] = Array()
     /* The current number of the Chapter */
-    private var _chapter: Int = 0
+    private var _chapter: Int = 1
     /* The turn of a player. 0 <= turn <= 3. it is initially -1 because new Chapter always adds 1. */
-    private var _turn: Int = -1
-    /* The positions of all the players are mapped on this var. */
-    private var _playerPositions: Map[IPlayer, Panel] = Map()
+    private var _turn: Int = 0
     /* The winner of the game. */
     private var _winner: Option[IPlayer] = None
     /* The view that the controller is going to use. Can be changed. */

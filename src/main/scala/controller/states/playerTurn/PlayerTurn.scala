@@ -5,9 +5,8 @@ import controller.GameController
 import controller.states.GameState
 import model.unit.player.IPlayer
 import model.panel.Panel
-
 import controller.states.combat.CombatPvsP
-import view.msg.{HomeMsg, PathMsg}
+import view.msg.{HomeMsg, PathMsg, StringMsg}
 
 /** The Player Turns.
  *
@@ -19,11 +18,16 @@ class PlayerTurn(controller: GameController) extends GameState(controller) {
 
     override def play(): Unit = {
         val player: IPlayer = controller.currentCharacter
+        controller.view.sendMsg(new StringMsg(s"${player.name} is your turn!!"))
 
         val chapterStars: Int = (controller.chapter / 5) + 1
         player.stars += chapterStars
 
+        controller.view.receiveStringInput(new StringMsg(s"${player.name} roll the Dice"))
         movesLeft = player.rollDice()
+        controller.view.sendMsg(new StringMsg(s"Yeah, you have ${movesLeft} moves."))
+        initialMoves = movesLeft
+
         while (moving(player)) {
             movesLeft -= 1
         }
@@ -34,7 +38,7 @@ class PlayerTurn(controller: GameController) extends GameState(controller) {
         val panel: Panel = controller.currentPanel
         if (movesLeft < 1) return false
 
-        if(panel.canStopHere(player) && wantsToStop(player)) {
+        if(panel.canStopHere(player) && (initialMoves > movesLeft) && wantsToStop(player)) {
             stop()
         } else if(panel.nextPanelsCount == 1){
             val nextPanel: Panel = panel.nextPanels.head
@@ -63,4 +67,5 @@ class PlayerTurn(controller: GameController) extends GameState(controller) {
     }
 
     private var movesLeft: Int = 0
+    private var initialMoves: Int = 0
 }
