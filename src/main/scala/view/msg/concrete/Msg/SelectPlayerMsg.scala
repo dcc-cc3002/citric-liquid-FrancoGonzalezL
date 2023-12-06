@@ -1,7 +1,8 @@
 package cl.uchile.dcc.citric
-package view.msg
+package view.msg.concrete.Msg
 
 import model.unit.player.IPlayer
+import view.msg.ADisplayable
 
 class SelectPlayerMsg(currentPlayer: IPlayer, options: Array[IPlayer]) extends ADisplayable {
     override def max: Int = options.length + 2

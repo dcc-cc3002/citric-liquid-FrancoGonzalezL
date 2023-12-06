@@ -6,7 +6,7 @@ import controller.states.GameState
 import model.unit.player.IPlayer
 import model.panel.Panel
 import controller.states.combat.CombatPvsP
-import view.msg.{HomeMsg, PathMsg, StringMsg}
+import cl.uchile.dcc.citric.view.msg.concrete.Msg.{HomeMsg, PathMsg, StringMsg}
 
 /** The Player Turns.
  *

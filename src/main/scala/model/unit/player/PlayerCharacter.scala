@@ -110,7 +110,7 @@ class PlayerCharacter(
 
     override def normaLvl: Int = _norma.normaLvl
 
-    override def goal_=(option: String): Boolean = {
+    override def goal_=(option: Int): Boolean = {
         _norma.goal = option
     }
 
@@ -120,9 +120,8 @@ class PlayerCharacter(
         val newNorma: Option[INorma] = _norma.normaCheck(panel)
         if(newNorma.isDefined) {
             _norma = newNorma.get
-        }
-        if(normaLvl == _norma.maxNormaLvl)
             notifyObservers(response=this)
+        }
     }
 
     override def rewardFromWildUnit(defeated: IWildUnit): Unit = {

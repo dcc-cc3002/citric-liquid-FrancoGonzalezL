@@ -2,12 +2,14 @@ package cl.uchile.dcc.citric
 package controller
 
 import controller.states.startAndEnd.PreGame
+
 import states._
 import model.unit.player.IPlayer
 import model.panel.Panel
 import observer.{ISubject, Observer}
-import view.msg.{PlayAgainMsg, StringMsg}
 import view.{IView, View}
+
+import cl.uchile.dcc.citric.view.msg.concrete.Msg.{PlayAgainMsg, SelectGoalMsg, StringMsg}
 
 /** Represent The Game.
  *
@@ -47,7 +49,7 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
     }
 
     /* To Simulate a step in the game. */
-    private def play(): Unit = state.play()
+    protected[controller] def play(): Unit = state.play()
 
     protected[controller] def advanceTurn(): Unit = {
         _turn += 1
@@ -60,9 +62,13 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
 
     /* When a player has achieved Norma lvl 6, the controller should be notified. */
     override def update(subject: ISubject[IPlayer], msg: IPlayer): Unit = {
-        val winner: IPlayer = msg
-        if (winner.normaLvl < 6) throw new AssertionError("The player should have Norma 6 to win the Game")
-        _winner = Some(winner)
+        val player: IPlayer = msg
+        if (player.normaLvl == 6) {
+            _winner = Some(player)
+        } else{
+            val selected: Int = view.receiveIntInput(new SelectGoalMsg(player))
+            player.goal = selected
+        }
     }
 
     /* This should change the View. Useful for debugging. */
@@ -119,7 +125,7 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
     def startGame(): Unit = state.startGame()
     def finishGame(): Unit = state.finishGame()
     def recoverPlayer(): Unit = state.recoverPlayer()
-    def playTurn(): Unit = state.playTurn()
+    def playTurn(): Unit = state. playTurn()
     def stop(): Unit = state.stop()
     def finishCombat(): Unit = state.finishCombat()
     def encounter(): Unit = state.encounter()

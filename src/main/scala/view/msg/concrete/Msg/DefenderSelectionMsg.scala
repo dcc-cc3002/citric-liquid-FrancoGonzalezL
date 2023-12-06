@@ -1,7 +1,8 @@
 package cl.uchile.dcc.citric
-package view.msg
+package view.msg.concrete.Msg
 
 import model.unit.IUnit
+import view.msg.ADisplayable
 
 class DefenderSelectionMsg(defender: IUnit) extends ADisplayable {
 

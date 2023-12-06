@@ -1,5 +1,7 @@
 package cl.uchile.dcc.citric
-package view.msg
+package view.msg.concrete.Msg
+
+import view.msg.ADisplayable
 
 class PlayAgainMsg extends ADisplayable {
     override def max: Int = 2

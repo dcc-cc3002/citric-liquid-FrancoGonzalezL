@@ -2,9 +2,9 @@ package cl.uchile.dcc.citric
 
 import controller.GameController
 
-import scala.util.Random
-
+/** Simulates the Game. */
 object Main {
+
     def main(args: Array[String]): Unit = {
         val game: GameController = new GameController
 

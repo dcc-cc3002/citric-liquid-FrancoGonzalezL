@@ -5,7 +5,7 @@ import controller.states.GameState
 import controller.GameController
 import model.unit.IUnit
 import model.unit.player.IPlayer
-import view.msg.{DefenderSelectionMsg, StringMsg}
+import cl.uchile.dcc.citric.view.msg.concrete.Msg.{DefenderSelectionMsg, StringMsg}
 
 /** This Abstract state simulates the battle between two units.
  *

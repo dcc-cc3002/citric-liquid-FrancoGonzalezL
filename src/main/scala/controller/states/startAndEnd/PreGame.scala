@@ -4,10 +4,10 @@ package controller.states.startAndEnd
 import controller.GameController
 import controller.states.{Chapter, GameState}
 import model.unit.player.IPlayer
-import view.msg.StringMsg
 
 import cl.uchile.dcc.citric.factory.panel.{BasicMapFactory, MapFactory}
 import cl.uchile.dcc.citric.factory.unit.PlayerFactory
+import cl.uchile.dcc.citric.view.msg.concrete.Msg.StringMsg
 
 /** Controls the Pre Game settings.
  *
@@ -37,6 +37,7 @@ class PreGame(controller: GameController) extends GameState(controller) {
 
             /* Register the controller as an observer of the player. */
             player.registerObserver(controller)
+            player.notifyObservers(player)
 
             /* Add the character to the Game. */
             controller.addCharacter(player)

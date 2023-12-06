@@ -1,8 +1,9 @@
 package cl.uchile.dcc.citric
-package view.msg
+package view.msg.concrete.Msg
 
-import model.unit.player.IPlayer
 import model.panel.Panel
+import model.unit.player.IPlayer
+import view.msg.ADisplayable
 
 class PathMsg(player: IPlayer, options: Array[Panel]) extends ADisplayable {
     override def max: Int = options.length

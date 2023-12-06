@@ -22,9 +22,10 @@ class EncounterPanel extends APanel {
     override def apply(player: IPlayer): Unit = wildUnit
 
     override def wildUnit: Option[IUnit] = {
-        if(_wildUnit.isEmpty || _wildUnit.get.hp == 0)
+        if(_wildUnit.isEmpty || _wildUnit.get.hp == 0) {
             wildUnitFactory.setRandomStats()
             _wildUnit = Some(wildUnitFactory.createUnit(""))
+        }
         _wildUnit
     }
 

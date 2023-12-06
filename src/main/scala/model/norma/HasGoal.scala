@@ -24,5 +24,5 @@ trait HasGoal {
      * @param option The goal selected by the player. It Must be
      *               either 'Stars' or 'Victories'.
      */
-    def goal_=(option: String): Boolean
+    def goal_=(option: Int): Boolean
 }

@@ -6,8 +6,6 @@ import controller.states.playerTurn.{PlayerTurn, Recovery}
 import model.unit.player.IPlayer
 import controller.states.startAndEnd.EndGame
 
-import cl.uchile.dcc.citric.view.msg.StringMsg
-
 /** Controls the Chapters of the Game.
  *
  *  From this state:

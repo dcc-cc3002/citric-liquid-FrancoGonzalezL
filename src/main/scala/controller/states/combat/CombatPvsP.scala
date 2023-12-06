@@ -2,12 +2,11 @@ package cl.uchile.dcc.citric
 package controller.states.combat
 
 import controller.GameController
-import controller.states.{GameState, LandingPanel}
+import controller.states.LandingPanel
 
 import model.panel.Panel
-import model.unit.IUnit
 import model.unit.player.IPlayer
-import view.msg.{DefenderSelectionMsg, SelectPlayerMsg, StringMsg}
+import view.msg.concrete.Msg.SelectPlayerMsg
 
 
 /** Represent a Combat between a Player and another Player.

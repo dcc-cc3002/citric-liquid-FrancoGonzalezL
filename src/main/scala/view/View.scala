@@ -1,7 +1,8 @@
 package cl.uchile.dcc.citric
 package view
 
-import view.msg.{Displayable, StringMsg}
+import view.msg.Displayable
+import cl.uchile.dcc.citric.view.msg.concrete.Msg.StringMsg
 import scala.io.StdIn
 
 class View extends AView {

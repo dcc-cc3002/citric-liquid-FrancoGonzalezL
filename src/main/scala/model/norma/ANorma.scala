@@ -20,12 +20,14 @@ abstract class ANorma(player: IPlayer) extends INorma{
         else _goal.get.toString
     }
 
-    override def goal_=(option: String): Boolean = {
-        if (_goal.isDefined) false
-        else if(option==victories_s) {
+    override def goal_=(option: Int): Boolean = {
+        if (_goal.isDefined){
+            false
+        }
+        else if (option == victories_s) {
             _goal = Some(new VictoriesGoal(victoriesRequired, player))
             true
-        }else if(option==stars_s){
+        }else if (option == stars_s){
             _goal = Some(new StarsGoal(starsRequired, player))
             true
         }else
@@ -47,6 +49,6 @@ abstract class ANorma(player: IPlayer) extends INorma{
      */
     private var _goal: Option[IGoal] = None
 
-    private val victories_s: String = "Victories"
-    private val stars_s: String = "Stars"
+    private val stars_s: Int = 1
+    private val victories_s: Int = 2
 }

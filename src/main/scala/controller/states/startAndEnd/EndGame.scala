@@ -4,7 +4,7 @@ package controller.states.startAndEnd
 import controller.GameController
 import controller.states.GameState
 import model.unit.player.IPlayer
-import view.msg.WinnerMsg
+import cl.uchile.dcc.citric.view.msg.concrete.Msg.WinnerMsg
 
 /** Controls the end of the Game.
  *  Should clear all the variables
