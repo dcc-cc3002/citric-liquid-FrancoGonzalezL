@@ -6,8 +6,12 @@ import model.panel.Panel
 import cl.uchile.dcc.citric.model.panel.concretePanel.{HomePanel, NeutralPanel}
 
 class NormaTest extends munit.FunSuite {
-    val StarsGoal: String = "Stars"
-    val VictoriesGoal: String = "Victories"
+    val starsGoalInput: Int = 1
+    val victoriesGoalInput: Int = 2
+
+    val starsGoalString: String = "Stars"
+    val victoriesGoalString: String = "Victories"
+
     val name1: String = "player1"
     val maxHp: Int = 100
     val attack: Int = 10
@@ -29,23 +33,22 @@ class NormaTest extends munit.FunSuite {
 
     test("The goal can not be changed until it is completed"){
         //choose the goal
-        assert(player.goal = StarsGoal)
-        assert(player.goal == StarsGoal)
+        assert(player.goal = starsGoalInput)
+        assert(player.goal == starsGoalString)
         //can not be changed
-        assert(!(player.goal = VictoriesGoal))
-        assert(player.goal != VictoriesGoal)
+        assert(!(player.goal = victoriesGoalInput))
+        assert(player.goal != victoriesGoalString)
         //complete the goal
         player.stars += 10
         homePanel.apply(player)
         //try again
-        assert(player.goal = VictoriesGoal)
+        assert(player.goal = victoriesGoalInput)
     }
 
     test("The goal should be either 'Stars' or 'Victories'"){
-        assert(!(player.goal = "Hp"))
-        assert(!(player.goal = "stars"))
-        assert(!(player.goal = "victories"))
-        assert(player.goal = VictoriesGoal)
+        assert(!(player.goal = 0))
+        assert(!(player.goal = 10))
+        assert(player.goal = victoriesGoalInput)
     }
 
     test("The players should have a goal to level up their Norma"){
@@ -53,7 +56,7 @@ class NormaTest extends munit.FunSuite {
 
         homePanel.apply(player)
         assertEquals(player.normaLvl, 1)
-        player.goal = StarsGoal
+        player.goal = starsGoalInput
         player.stars += 10
 
         homePanel.apply(player)
@@ -65,18 +68,18 @@ class NormaTest extends munit.FunSuite {
         player.stars = 500
         for(lvl <- 1 to 5){
             assertEquals(player.normaLvl, lvl)
-            player.goal = StarsGoal
+            player.goal = starsGoalInput
             homePanel.apply(player)
         }
         assertEquals(player.normaLvl, 6)
-        player.goal = StarsGoal
+        player.goal = starsGoalInput
         homePanel.apply(player)
         assertEquals(player.normaLvl, expected=6)
     }
 
     test("The player should only level up if the player has achieved the requirements of the current goal"){
         val prevNormaLvl: Int = player.normaLvl
-        player.goal = StarsGoal
+        player.goal = starsGoalInput
         player.stars += 9
         homePanel.apply(player)
         assertEquals(player.normaLvl, prevNormaLvl)
