@@ -21,15 +21,15 @@ class EncounterPanel extends APanel {
      */
     override def apply(player: IPlayer): Unit = wildUnit
 
-    def wildUnit: IUnit = {
+    override def wildUnit: Option[IUnit] = {
         if(_wildUnit.isEmpty || _wildUnit.get.hp == 0)
             wildUnitFactory.setRandomStats()
-            _wildUnit = Some(wildUnitFactory.createUnit("PlayerKillerCitricLiquidGameV1.1"))
-        _wildUnit.get
+            _wildUnit = Some(wildUnitFactory.createUnit(""))
+        _wildUnit
     }
 
     /** Current wildUnit on the Panel */
     private var _wildUnit: Option[IUnit] = None
     /* Factory to generate the wild units */
-    private var wildUnitFactory: UnitFactory[IWildUnit] = new WildUnitFactory
+    private val wildUnitFactory: UnitFactory[IWildUnit] = new WildUnitFactory
 }

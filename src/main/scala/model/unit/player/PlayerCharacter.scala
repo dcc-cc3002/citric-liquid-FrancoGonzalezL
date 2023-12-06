@@ -7,6 +7,7 @@ import model.norma.INorma
 import model.norma.levels.NormaLvl1
 import model.panel.concretePanel.HomePanel
 
+import cl.uchile.dcc.citric.model.panel.Panel
 import cl.uchile.dcc.citric.observer.Observer
 
 import scala.util.Random
@@ -160,4 +161,24 @@ class PlayerCharacter(
         })
     }
 
+    override def canReceiveInput: Boolean = true
+
+    override def currentPanel: Option[Panel] = {
+        _currentPanel
+    }
+
+    override def moveToPanel(panel: Panel): Unit = {
+        if( currentPanel.isDefined) {
+            if( !currentPanel.get.containsNextPanel(panel) )
+                throw new AssertionError("Can move only to panels that are connected.")
+            else
+                currentPanel.get.removeCharacter(this)
+        }
+
+        panel.addCharacter(this)
+        _currentPanel = Some(panel)
+    }
+
+    /* Variable to save the current Panel. Can be None. */
+    private var _currentPanel: Option[Panel] = None
 }

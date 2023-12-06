@@ -3,6 +3,9 @@ package model.panel
 
 import model.unit.player.IPlayer
 
+import cl.uchile.dcc.citric.model.unit.IUnit
+import cl.uchile.dcc.citric.model.unit.wildUnit.IWildUnit
+
 import scala.collection.mutable.ArrayBuffer
 
 /** Abstract class representing a Panel. */
@@ -75,41 +78,9 @@ abstract class APanel extends Panel {
         }
     }
 
-    override def getNextPanelByIndex(index: Int): Panel = {
-        val panel: Option[Panel] =
-            _nextPanels.find(panel => {
-                _nextPanels.indexOf(panel) == index
-            })
-        if(panel.isDefined) panel.get
-        else throw new AssertionError("Panel not found")
-    }
-
-    override def getCharacterByIndex(index: Int): IPlayer = {
-        val player: Option[IPlayer] =
-            _characters.find(player => {
-                _characters.indexOf(player) == index
-            })
-        if (player.isDefined) player.get
-        else throw new AssertionError("Player not found in Panel")
-    }
-
-    override def nextPanelsToString(init: Int): String = {
-        var s: String = ""
-        _nextPanels.foreach(panel => {
-            s += s"${_nextPanels.indexOf(panel)+init} -> Panel type: ${panel.getClass.getSimpleName}, N of Players: ${panel.charactersCount}\n"
-        })
-        s
-    }
-
-    override def charactersToString(init: Int): String = {
-        var s: String = ""
-        _characters.foreach(player => {
-            s += s"${_characters.indexOf(player)+init} -> Name: ${player.name}, Hp: ${player.hp}, attack: ${player.attack}\n"
-        })
-        s
-    }
-
     override def canStopHere(player: IPlayer): Boolean = false
+
+    override def wildUnit: Option[IUnit] = None
 
     override def toString: String = {
         var s: String =

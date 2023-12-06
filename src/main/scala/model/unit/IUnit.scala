@@ -116,4 +116,6 @@ trait IUnit {
      * @param defeated The WildUnit that has been defeated.
      */
     protected[unit] def rewardFromWildUnit(defeated: IWildUnit): Unit
+
+    def canReceiveInput: Boolean
 }

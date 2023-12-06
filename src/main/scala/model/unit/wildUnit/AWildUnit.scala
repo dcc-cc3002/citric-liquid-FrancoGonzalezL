@@ -30,4 +30,6 @@ abstract class AWildUnit(maxHpStat: Int, randomNumberGenerator: Random)
         this.stars     += totalStars
         defeated.stars -= totalStars
     }
+
+    override def canReceiveInput: Boolean = false
 }

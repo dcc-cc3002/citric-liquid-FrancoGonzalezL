@@ -4,7 +4,9 @@ package player
 
 import model.norma.HasGoal
 import model.panel.concretePanel.HomePanel
-import observer.{ISubject, Subject}
+import observer.ISubject
+
+import cl.uchile.dcc.citric.model.panel.Panel
 
 /** Represents a Player.
  *
@@ -48,4 +50,17 @@ trait IPlayer extends  IUnit with HasGoal with ISubject[IPlayer] {
      * @param panel The Panel where the player is located.
      */
     def normaCheck(panel: HomePanel): Unit
+
+    /** Returns an option of current Panel.
+     *  Useful to get track of the player position.
+     *
+     *  If a Panel contains a Player, the it should return that Panel.
+     *
+     *  If no Panel contains this Player, this should return None.
+     *
+     */
+    def currentPanel: Option[Panel]
+
+    /** This functions moves the player from one panel to another. */
+    def moveToPanel(panel: Panel): Unit
 }

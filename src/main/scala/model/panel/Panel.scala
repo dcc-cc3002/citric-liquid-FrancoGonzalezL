@@ -3,6 +3,9 @@ package model.panel
 
 import model.unit.player.IPlayer
 
+import cl.uchile.dcc.citric.model.unit.IUnit
+import cl.uchile.dcc.citric.model.unit.wildUnit.IWildUnit
+
 import scala.collection.mutable.ArrayBuffer
 
 /** Represents a single cell on a board, known as a Panel.
@@ -71,14 +74,6 @@ trait Panel {
      */
     def removeNextPanel(otherPanel: Panel): Boolean
 
-    def getNextPanelByIndex(index: Int): Panel
-
-    def getCharacterByIndex(index: Int): IPlayer
-
-    def nextPanelsToString(init: Int): String
-
-    def charactersToString(init: Int): String
-
     /** The effect of the Panel in a player.
      *
      * This might be invoked when a player moves to this panel.
@@ -90,5 +85,7 @@ trait Panel {
     def apply(player: IPlayer): Unit
 
     def canStopHere(player: IPlayer): Boolean
+
+    def wildUnit: Option[IUnit]
 }
 
