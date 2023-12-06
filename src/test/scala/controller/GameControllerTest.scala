@@ -52,6 +52,7 @@ class GameControllerTest extends munit.FunSuite {
     }
 
     test("The Game has to continue until one player is the winner"){
+        assert(game.winner.isEmpty)
         game.startGame()
         game.run()
         assert(game.winner.isDefined)
