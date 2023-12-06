@@ -3,6 +3,7 @@ package factory.unit
 
 import scala.util.Random
 
+/** Abstract Fabric. Implements some things about the random generator. */
 abstract class AUnitFactory[T] extends UnitFactory[T] {
 
     def setRandomStats(): Unit = {

@@ -5,6 +5,8 @@ import exceptions.FactoryConfigurationException
 import model.unit.wildUnit.IWildUnit
 import model.unit.wildUnit.concreteWildUnit.{Chicken, RoboBall, Seagull}
 
+/** A factory of wild Units.
+ * */
 class WildUnitFactory extends AUnitFactory[IWildUnit] {
 
     override def setRandomStats(): Unit = {

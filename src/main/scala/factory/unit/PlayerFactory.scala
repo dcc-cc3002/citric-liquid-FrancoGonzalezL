@@ -4,6 +4,7 @@ package factory.unit
 import exceptions.FactoryConfigurationException
 import model.unit.player.{IPlayer, PlayerCharacter}
 
+/** A factory of PlayerCharacters. */
 class PlayerFactory extends AUnitFactory[IPlayer] {
 
     override def setRandomStats(): Unit = {
