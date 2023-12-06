@@ -23,6 +23,10 @@ class PreGame(controller: GameController) extends GameState(controller) {
         this.changeState(new Chapter(controller))
     }
 
+    /** Sets up the players for the game.
+     *
+     * @return An array of players that will participate in the game.
+     */
     private def setPlayers(): Array[IPlayer] = {
         var players: Array[IPlayer] = Array()
         for(playerIndex <- 1 to controller.numberOfPlayers){
@@ -49,6 +53,8 @@ class PreGame(controller: GameController) extends GameState(controller) {
 
     override def isStarting: Boolean = true
 
+    /* Factory to create the map for the game. */
     private var mapFactory: MapFactory = new BasicMapFactory
+    /* Factory to create players for the game. */
     private val playerFactory: PlayerFactory = new PlayerFactory()
 }

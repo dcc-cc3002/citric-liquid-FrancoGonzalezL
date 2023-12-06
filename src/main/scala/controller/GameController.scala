@@ -101,6 +101,7 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
     /** Returns the Player that has to play its turn. */
     protected[controller] def currentCharacter: IPlayer = _characters(turn)
 
+    /* Adds a new character to the Game. */
     protected[controller] def addCharacter(player: IPlayer): Unit = {
         if(_characters.length < numberOfPlayers)
             _characters = _characters :+ player
@@ -108,17 +109,20 @@ class GameController extends GameTransitions with GameChecks with Observer[IPlay
             throw new AssertionError("No more players can be added to the Game.")
     }
 
+    /* Returns the panel where the currently active player is located. */
     protected[controller] def currentPanel: Panel = {
         val panel: Option[Panel] = currentCharacter.currentPanel
         if (panel.isDefined) panel.get
         else throw new AssertionError("Player is Not associated with a Panel")
     }
 
+    /* Adds 1 to the chapters. Should be called every time all four players have played their turn. */
     protected[controller] def advanceChapter(): Unit = {
         _chapter += 1
         view.sendMsg(new StringMsg(s"\nChapter ${this.chapter}!! Good luck. \n"))
     }
 
+    /* Moves the current character to a next Panel. */
     protected[controller] def moveCharacterToPanel(panel: Panel): Unit = {
         currentCharacter.moveToPanel(panel)
     }
