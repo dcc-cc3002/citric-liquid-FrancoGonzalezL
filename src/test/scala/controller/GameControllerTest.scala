@@ -19,12 +19,11 @@ class GameControllerTest extends munit.FunSuite {
         playerFactory.setRandomStats()
         player = playerFactory.createUnit("Test Player")
         game = new GameController
+        game.setView(new NullView)
     }
 
 
     test("When a player has achieved Norma lvl 6 the winner should be defined. ") {
-        game.setView(new NullView)
-
         /* Register the controller */
         player.registerObserver(game)
         /* new Home Panel for the Norma Check. */
@@ -50,6 +49,12 @@ class GameControllerTest extends munit.FunSuite {
         assert(game.winner.isDefined)
         /* And the winner is the player with Norma lvl 6. */
         assertEquals(player, game.winner.get)
+    }
+
+    test("The Game has to continue until one player is the winner"){
+        game.startGame()
+        game.run()
+        assert(game.winner.isDefined)
     }
 
 }
